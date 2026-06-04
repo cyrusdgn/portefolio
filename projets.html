@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Projets et Procédures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #06060f;
+      --surface:   #0d0d1e;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(6,6,15,0.75); backdrop-filter: blur(22px); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 500px; }
+    .hero-scroll-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: var(--text); text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; padding: 0.65rem 1.5rem; border-radius: 100px; transition: background 0.2s, border-color 0.2s; margin-top: 0.25rem; }
+    .hero-scroll-btn:hover { background: rgba(45,45,255,0.18); border-color: rgba(45,45,255,0.4); }
+
+    /* ── CONTENT ── */
+    .page-content { padding-top: 2rem; max-width: 1060px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 5rem; }
+
+    /* ── SECTION LABEL ── */
+    .sec-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
+    .sec-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; margin-bottom: 2rem; }
+
+    /* ── PROCEDURES GRID ── */
+    .procedures-section { margin-bottom: 5rem; opacity: 0; }
+    .procedures-section.in-view { animation: fadeUp 0.6s ease forwards; }
+
+    .proc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+    .proc-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .procedures-section.in-view .proc-card:nth-child(1)  { animation: fadeUp 0.4s ease forwards 0.05s; }
+    .procedures-section.in-view .proc-card:nth-child(2)  { animation: fadeUp 0.4s ease forwards 0.12s; }
+    .procedures-section.in-view .proc-card:nth-child(3)  { animation: fadeUp 0.4s ease forwards 0.19s; }
+    .procedures-section.in-view .proc-card:nth-child(4)  { animation: fadeUp 0.4s ease forwards 0.26s; }
+    .procedures-section.in-view .proc-card:nth-child(5)  { animation: fadeUp 0.4s ease forwards 0.33s; }
+    .procedures-section.in-view .proc-card:nth-child(6)  { animation: fadeUp 0.4s ease forwards 0.40s; }
+    .procedures-section.in-view .proc-card:nth-child(7)  { animation: fadeUp 0.4s ease forwards 0.47s; }
+    .procedures-section.in-view .proc-card:nth-child(8)  { animation: fadeUp 0.4s ease forwards 0.54s; }
+    .procedures-section.in-view .proc-card:nth-child(9)  { animation: fadeUp 0.4s ease forwards 0.61s; }
+    .procedures-section.in-view .proc-card:nth-child(10) { animation: fadeUp 0.4s ease forwards 0.68s; }
+    .procedures-section.in-view .proc-card:nth-child(11) { animation: fadeUp 0.4s ease forwards 0.75s; }
+    .procedures-section.in-view .proc-card:nth-child(12) { animation: fadeUp 0.4s ease forwards 0.82s; }
+
+    .proc-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.32); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+
+    /* Image area */
+    .proc-img {
+      width: 100%; height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+      background: #0a0a1f;
+    }
+    .proc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .proc-card:hover .proc-img img { transform: scale(1.05); }
+
+    /* Placeholder when no image */
+    .proc-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800;
+      letter-spacing: 0.04em; color: rgba(255,255,255,0.7);
+    }
+
+    /* Hover overlay on image */
+    .proc-img-overlay {
+      position: absolute; inset: 0;
+      background: rgba(45,45,255,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.25s;
+      color: #fff; font-size: 0.8rem; font-weight: 500; gap: 0.4rem;
+    }
+    .proc-card:hover .proc-img-overlay { opacity: 1; }
+
+    /* Card text */
+    .proc-info { padding: 1rem 1.1rem 1.15rem; }
+    .proc-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .proc-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── SEPARATOR ── */
+    .sep { height: 1px; background: var(--border); margin: 4rem 0; }
+
+    /* ── ARCHITECTURE ── */
+    .schema-section { margin-bottom: 3rem; }
+    .schema-section.in-view { animation: fadeUp 0.6s ease forwards; }
+
+    /* Clickable schema card */
+    .schema-card {
+      display: block; text-decoration: none;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      position: relative; cursor: pointer;
+    }
+    .schema-card:hover { border-color: rgba(45,45,255,0.35); box-shadow: 0 20px 60px rgba(0,0,0,0.5); transform: translateY(-4px); }
+
+    .schema-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: rgba(45,45,255,0.08);
+      border-bottom: 1px solid var(--border);
+    }
+    .schema-bar-left { display: flex; align-items: center; gap: 0.7rem; }
+    .schema-icon { width: 36px; height: 36px; background: rgba(45,45,255,0.15); border: 1px solid rgba(45,45,255,0.25); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; flex-shrink: 0; }
+    .schema-filename { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .schema-type { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1px; }
+    .schema-open-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--blue); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; padding: 0.42rem 1rem; border-radius: 7px; transition: background 0.2s; white-space: nowrap; flex-shrink: 0; }
+    .schema-card:hover .schema-open-btn { background: var(--blue-glow); }
+
+    /* Schema preview area */
+    .schema-preview {
+      width: 100%;
+      background: #080818;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+    .schema-preview img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      padding: 0.75rem;
+      transition: transform 0.4s;
+      display: block;
+    }
+    .schema-card:hover .schema-preview img { transform: scale(1.02); }
+
+    /* Placeholder grid lines when no image */
+    .schema-placeholder {
+      width: 85%; height: 80%;
+      border: 1px solid rgba(45,45,255,0.15);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1px;
+      overflow: hidden;
+      background: rgba(45,45,255,0.04);
+    }
+    .schema-cell { background: rgba(45,45,255,0.03); border: 1px solid rgba(45,45,255,0.06); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+    .schema-cell.node { background: rgba(45,45,255,0.12); border-color: rgba(45,45,255,0.25); }
+    .schema-cell.node::after { content: ''; width: 28px; height: 28px; border-radius: 50%; background: rgba(45,45,255,0.3); border: 1px solid rgba(45,45,255,0.5); display: block; }
+    .schema-cell.line { background: transparent; border: none; position: relative; }
+    .schema-cell.line::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(45,45,255,0.2); }
+
+    /* Schema hover overlay */
+    .schema-overlay { position: absolute; inset: 0; background: rgba(6,6,15,0.6); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.9rem; opacity: 0; transition: opacity 0.25s; }
+    .schema-card:hover .schema-overlay { opacity: 1; }
+    .schema-overlay-circle { width: 68px; height: 68px; border-radius: 50%; background: rgba(45,45,255,0.22); border: 1px solid rgba(45,45,255,0.45); display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .schema-overlay p { font-size: 0.92rem; color: var(--text); font-weight: 500; }
+    .schema-overlay span { font-size: 0.76rem; color: var(--muted); }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
+    .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .proc-grid { grid-template-columns: repeat(2, 1fr); }
+      .schema-preview { width: 100%; }
+      .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>À propos <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li><a href="bts.html">BTS</a></li>
+      <li><a href="tcs.html">TCS</a></li>
+      <li>
+        <button>Mes Projets <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="dossiers.html">Dossiers</a></li>
+          <li><a href="projets.html" class="active-sub">Projets et Procédures</a></li>
+        </ul>
+      </li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille Informatique</a></li>
+          <li><a href="veille-juridique.html">Veille Juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <button class="nav-cta">Me contacter</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Mes Projets · BTS SIO SISR</span>
+      <h1>Projets et <span class="grad">Procédures</span></h1>
+      <p>Ensemble des projets scolaires et procédures techniques réalisés durant ma formation. Cliquez sur une carte pour ouvrir le document.</p>
+      <a href="#schema" class="hero-scroll-btn">
+        Voir le schéma réseau
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="page-content">
+
+    <!-- Architecture Réseau -->
+    <section class="schema-section" id="schema">
+      <p class="sec-label">Infrastructure</p>
+      <h2 class="sec-heading">Architecture Réseau</h2>
+      <a class="schema-card" href="Dossiers/schema-reseau.jfif" target="_blank" rel="noopener noreferrer">
+        <div class="schema-bar">
+          <div class="schema-bar-left">
+            <div class="schema-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="3" width="7" height="7" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><path d="M5.5 10v4h13v-4M12 14v-4"/></svg>
+            </div>
+            <div>
+              <div class="schema-filename">Architecture Réseau — Infrastructure IT</div>
+              <div class="schema-type">Schéma réseau · Image · Cliquez pour ouvrir</div>
+            </div>
+          </div>
+          <div class="schema-open-btn">Ouvrir <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="schema-preview">
+          <img src="Dossiers/schema-reseau.jfif" alt="Schéma d'infrastructure réseau" />
+          <div class="schema-overlay">
+            <div class="schema-overlay-circle"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+            <p>Ouvrir le schéma réseau</p>
+            <span>S'ouvre dans un nouvel onglet</span>
+          </div>
+        </div>
+      </a>
+    </section>
+
+    <div class="sep"></div>
+
+    <!-- Procédures -->
+    <section class="procedures-section" id="procedures">
+      <p class="sec-label">Projets scolaires</p>
+      <h2 class="sec-heading">Procédures techniques</h2>
+
+      <div class="proc-grid">
+
+        <!-- Switch / Router / VLAN — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Switch%20-%20Router%20-%20VLAN.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0d1b2a,#1a2f4a);">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(100,160,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="6" rx="1"/><circle cx="6" cy="9" r="1" fill="rgba(100,160,255,0.7)"/><circle cx="10" cy="9" r="1" fill="rgba(100,160,255,0.7)"/><path d="M6 12v6M10 12v6"/></svg>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure Switch · Router · VLAN</div>
+            <div class="proc-desc">Ajout et configuration d'un routeur et d'un commutateur, mise en place d'un VLAN sur ces deux équipements.</div>
+          </div>
+        </a>
+
+        <!-- Active Directory — fichier introuvable dans Dossiers, conserver lien actuel si nécessaire -->
+        <a class="proc-card" href="proc-ad.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0078d4,#005a9e);">
+              <span style="font-size:0.85rem; font-weight:800; color:rgba(255,255,255,0.85); text-align:center; line-height:1.3; padding:0 1rem;">Microsoft<br>Active Directory</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure Active Directory</div>
+            <div class="proc-desc">Installation et mise en place d'un Active Directory sur un serveur Proxmox et sa redondance.</div>
+          </div>
+        </a>
+
+        <!-- Exchange — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Exchange.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0072c6,#0050a0);">
+              <span style="font-size:1.1rem; font-weight:800; color:rgba(255,255,255,0.85);">Exchange</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure Exchange</div>
+            <div class="proc-desc">Procédure d'installation d'Exchange sur un serveur Active Directory et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- GLPI — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20GLPI.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0da8e2,#0078a8);">
+              <span style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.05em;">GLPI</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure GLPI</div>
+            <div class="proc-desc">Procédure d'installation de GLPI sur un serveur et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- Zabbix — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#cc0000,#990000);">
+              <span style="font-size:1.1rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.08em;">ZABBIX</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure Zabbix</div>
+            <div class="proc-desc">Procédure d'installation de Zabbix sur un serveur et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- UniFi — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20UniFi.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#006ac6,#004a96);">
+              <span style="font-size:1rem; font-weight:800; color:rgba(255,255,255,0.9);">UniFi</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure UniFi</div>
+            <div class="proc-desc">Installation et configuration d'une Borne Wi-Fi UniFi.</div>
+          </div>
+        </a>
+
+        <!-- GPO — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20GPO.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+              <span style="font-size:0.85rem; font-weight:800; color:rgba(200,200,255,0.8); text-align:center; line-height:1.4;">Group Policy<br>Objects</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure GPO</div>
+            <div class="proc-desc">Ajout et configuration d'une GPO sur un serveur Active Directory pour tous ses utilisateurs.</div>
+          </div>
+        </a>
+
+        <!-- XiVO — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20XiVo.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);">
+              <span style="font-size:1.1rem; font-weight:900; color:rgba(255,140,0,0.9); letter-spacing:0.06em;">XIVO</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure XiVo</div>
+            <div class="proc-desc">Procédure d'installation de XiVo sur un serveur et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- Artica — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Artica.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1b6b35,#134d26);">
+              <span style="font-size:1rem; font-weight:800; color:rgba(255,255,255,0.85);">Artica</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure Artica</div>
+            <div class="proc-desc">Procédure d'installation d'Artica sur un serveur et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- DMZ — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20DMZ%20Zevenet%2C%20Hyperv%20et%20WEB1-2.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#2d0050,#4a007a);">
+              <span style="font-size:0.82rem; font-weight:800; color:rgba(255,255,255,0.85); text-align:center; line-height:1.35; padding:0 0.5rem;">DMZ<br>Zevenet · Hyper-V<br>WEB1/2</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure DMZ</div>
+            <div class="proc-desc">Procédure d'installation de Zevenet sur un serveur et sa mise en fonction.</div>
+          </div>
+        </a>
+
+        <!-- FOG — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20FOG.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#006e7a,#004f58);">
+              <span style="font-size:1.2rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.04em;">FOG</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure FOG</div>
+            <div class="proc-desc">Procédure de mise en place d'un serveur ProjectFog afin de déployer des OS.</div>
+          </div>
+        </a>
+
+        <!-- VPN IKE v2 — fichier réel dans Dossiers -->
+        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20%20VPN%20-%20IKE%20v2.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a3a5c,#0d2240);">
+              <span style="font-size:0.85rem; font-weight:800; color:rgba(255,255,255,0.85); text-align:center; line-height:1.35;">VPN<br>IKE v2</span>
+            </div>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <div class="proc-title">Procédure VPN · IKE v2</div>
+            <div class="proc-desc">Procédure de mise en place d'un VPN IKE v2 sur un routeur Zywall USG FLEX 50.</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">BTS SIO SISR</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.procedures-section, .schema-section').forEach(el => obs.observe(el));
+
+    function FluidBg(id, opts={}) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
+      let t=0;
+      (function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.fillStyle='#06060f'; ctx.fillRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(6,6,15,0)'); v.addColorStop(1,'rgba(6,6,15,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  </script>
+</body>
+</html>

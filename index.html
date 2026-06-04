@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0714;
+      --surface:   #110d22;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #e8dfff;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.15rem 3rem;
+      background: rgba(6,6,15,0.75);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 0.78rem 3rem; }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+
+    .nav-links > li > a,
+    .nav-links > li > button {
+      color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400;
+      letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 0.22rem;
+      transition: color 0.18s, background 0.18s;
+      cursor: pointer; background: none; border: none;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > button:hover,
+    .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    .chev {
+      width: 9px; height: 9px; stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.22s;
+    }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+
+    .nav-links > li { position: relative; }
+
+    .nav-drop {
+      position: absolute; top: 100%; left: 0; min-width: 180px;
+      background: rgba(10,10,24,0.97);
+      border: 1px solid rgba(255,255,255,0.09); border-radius: 10px;
+      backdrop-filter: blur(28px); padding: 0.45rem; list-style: none;
+      opacity: 0; pointer-events: none; transform: translateY(7px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 400;
+    }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a {
+      display: block; padding: 0.48rem 0.88rem; color: var(--muted);
+      text-decoration: none; font-size: 0.815rem; border-radius: 7px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-drop li a:hover { color: var(--text); background: rgba(45,45,255,0.14); }
+
+    .nav-cta {
+      flex-shrink: 0; background: var(--blue); color: #fff; border: none;
+      padding: 0.52rem 1.25rem; border-radius: 6px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    #fluid-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 1;
+      background-image:
+        linear-gradient(rgba(45,45,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,45,255,0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 10rem 2rem 6rem;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.28);
+      color: #a5b4fc; font-size: 0.74rem; font-weight: 500;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      padding: 0.34rem 0.95rem; border-radius: 100px; margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+    .hero-tag::before {
+      content: ''; width: 6px; height: 6px; background: var(--blue);
+      border-radius: 50%; box-shadow: 0 0 8px var(--blue);
+      animation: blink 2s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+    h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1;
+      letter-spacing: -0.03em; margin-bottom: 0.25em;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.38s;
+    }
+    h1 .grad {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.1rem); color: var(--muted); font-weight: 300;
+      letter-spacing: 0.025em; margin-bottom: 1.4rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.52s;
+    }
+    .hero-subtitle em { color: #a5b4fc; font-style: normal; font-weight: 400; }
+
+    .hero-desc {
+      max-width: 520px; font-size: 0.975rem; color: var(--muted);
+      font-weight: 300; line-height: 1.8; margin-bottom: 2.5rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.66s;
+    }
+
+    .hero-actions {
+      display: flex; gap: 0.9rem; flex-wrap: wrap; justify-content: center;
+      margin-top: 2rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.8s;
+    }
+
+    .btn-primary {
+      background: var(--blue); color: #fff; border: none;
+      padding: 0.82rem 1.9rem; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(45,45,255,0.38);
+    }
+    .btn-primary:hover { background: var(--blue-glow); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(45,45,255,0.52); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04); color: var(--text);
+      border: 1px solid var(--border); padding: 0.82rem 1.9rem; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 400;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+
+    .scroll-hint {
+      position: absolute; bottom: 0.6rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: var(--muted); font-size: 0.68rem; letter-spacing: 0.12em;
+      text-transform: uppercase; z-index: 10;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 1.1s;
+    }
+    .scroll-line {
+      width: 1px; height: 38px;
+      background: linear-gradient(to bottom, var(--blue), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(0.5);opacity:0.35} }
+
+    /* ── PARCOURS ── */
+    .section-parcours { padding: 7rem 3rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 0.65rem; opacity: 0;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.1; margin-bottom: 0.7rem; opacity: 0;
+    }
+    .section-body { color: var(--muted); max-width: 480px; font-size: 0.93rem; margin-bottom: 3.5rem; opacity: 0; }
+
+    .in-view .section-label { animation: fadeUp 0.5s ease forwards 0s; }
+    .in-view .section-title { animation: fadeUp 0.5s ease forwards 0.1s; }
+    .in-view .section-body  { animation: fadeUp 0.5s ease forwards 0.2s; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; position: relative; overflow: hidden;
+      text-decoration: none; color: inherit;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; opacity: 0;
+    }
+    .in-view .card:nth-child(1) { animation: fadeUp 0.5s ease forwards 0.3s; }
+    .in-view .card:nth-child(2) { animation: fadeUp 0.5s ease forwards 0.44s; }
+    .in-view .card:nth-child(3) { animation: fadeUp 0.5s ease forwards 0.58s; }
+
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at top left, rgba(45,45,255,0.09) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .card:hover { transform: translateY(-6px); border-color: rgba(45,45,255,0.28); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 46px; height: 46px; background: rgba(45,45,255,0.11);
+      border: 1px solid rgba(45,45,255,0.2); border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.2rem; font-size: 1.25rem;
+    }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .card-sub { font-size: 0.78rem; color: var(--blue); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 0.8rem; }
+    .card-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+    .card-arrow {
+      position: absolute; bottom: 1.5rem; right: 1.5rem; color: var(--blue);
+      font-size: 1rem; opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%),
+        linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
+    }
+    .divider-text {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center; height: 100%;
+      font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800; color: rgba(255,255,255,0.055);
+      letter-spacing: 0.18em; text-transform: uppercase; user-select: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon {
+      width: 38px; height: 38px; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      nav.scrolled { padding: 0.7rem 1.5rem; }
+      .nav-links { display: none; }
+      .section-parcours { padding: 5rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Cyrus DEHGHAN</a>
+
+    <ul class="nav-links">
+      <li><a href="#" class="active">Accueil</a></li>
+
+      <li>
+        <button>À propos <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+
+      <li><a href="bts.html">BTS</a></li>
+      <li><a href="tcs.html">TCS</a></li>
+
+      <li>
+        <button>Mes Projets <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="dossiers.html">Dossiers</a></li>
+          <li><a href="projets.html">Projets et Procédures</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille Informatique</a></li>
+          <li><a href="veille-juridique.html">Veille Juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas id="fluid-canvas"></canvas>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <span class="hero-tag">BTS SIO SISR · Marseille, France</span>
+      <h1>Cyrus<br><span class="grad">DEHGHAN</span></h1>
+      <p class="hero-subtitle">Administration système et réseau</p>
+      <p class="hero-desc">Animé par un fort intérêt pour les infrastructures IT et les nouvelles technologies, je développe une expertise en administration système, sécurité réseau et virtualisation.</p>
+      <div class="hero-actions">
+        <a href="#parcours" class="btn-primary">
+          Voir mon parcours
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#" class="btn-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Mon CV
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Défiler</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- SECTION PARCOURS -->
+  <section class="section-parcours" id="parcours">
+    <p class="section-label">Mon parcours</p>
+    <h2 class="section-title">Explorez mes réalisations</h2>
+    <p class="section-body">Parcours scolaire et professionnel, projets et veilles technologiques — tout ce qui constitue mon profil.</p>
+    <div class="cards-grid">
+      <a href="projets.html" class="card">
+        <div class="card-icon">🎓</div>
+        <div class="card-title">Projets scolaires</div>
+        <div class="card-sub">Mes réalisations</div>
+        <div class="card-desc">Travaux pratiques et projets réalisés dans le cadre du BTS SIO SISR : infrastructure, réseau, sécurité.</div>
+        <span class="card-arrow">→</span>
+      </a>
+      <a href="alternance.html" class="card">
+        <div class="card-icon">💼</div>
+        <div class="card-title">Mon alternance</div>
+        <div class="card-sub">Mes missions</div>
+        <div class="card-desc">Missions et responsabilités exercées en entreprise dans le cadre de mon contrat d'alternance.</div>
+        <span class="card-arrow">→</span>
+      </a>
+      <a href="veille-info.html" class="card">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">Veilles</div>
+        <div class="card-sub">Dernières innovations</div>
+        <div class="card-desc">Suivi des évolutions technologiques en cybersécurité, cloud et systèmes d'information.</div>
+        <span class="card-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">BTS SIO SISR</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Navbar scroll ── */
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          const isOpen = item.classList.contains('open');
+          if (isOpen) {
+            item.classList.remove('open');
+          } else {
+            openItem();
+          }
+        });
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) {
+        navMenuItems.forEach(item => item.classList.remove('open'));
+      }
+    });
+
+    /* ── Scroll-reveal ── */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.section-parcours').forEach(el => obs.observe(el));
+
+    /* ══════════════════════════════════════════════
+       FLUID ORGANIC BLOB CANVAS
+       Smooth metaball-style animated background —
+       zero squares, just soft glowing orbs drifting
+    ══════════════════════════════════════════════ */
+    function FluidBg(canvasId, opts = {}) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const {
+        count  = 6,
+        speed  = 0.5,
+        minR   = 80,
+        maxR   = 200,
+        colors = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#6d28d9'],
+      } = opts;
+
+      let W, H;
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      const ro = new ResizeObserver(resize);
+      ro.observe(canvas.parentElement);
+
+      // Build blobs
+      const blobs = Array.from({ length: count }, (_, i) => {
+        const r = minR + Math.random() * (maxR - minR);
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * speed,
+          vy: (Math.random() - 0.5) * speed,
+          r,
+          color: colors[i % colors.length],
+          phase: Math.random() * Math.PI * 2,
+          breatheSpeed: 0.3 + Math.random() * 0.5,
+          wobble: 0.06 + Math.random() * 0.08,
+          rotSpeed: (Math.random() - 0.5) * 0.008,
+          rot: Math.random() * Math.PI * 2,
+        };
+      });
+
+      // Hex to rgb
+      function hex2rgb(hex) {
+        const v = parseInt(hex.slice(1), 16);
+        return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+      }
+      const rgbs = colors.map(hex2rgb);
+
+      let t = 0;
+
+      function tick() {
+        t += 0.012;
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+
+        // Dark base
+        ctx.fillStyle = '#06060f';
+        ctx.fillRect(0, 0, W, H);
+
+        // Draw each organic blob
+        blobs.forEach((b, i) => {
+          const rgb = rgbs[i % rgbs.length];
+          const breathe = b.r * (1 + 0.14 * Math.sin(t * b.breatheSpeed + b.phase));
+
+          // Use ellipse + rotate for organic shape
+          b.rot += b.rotSpeed;
+          const rx = breathe * (1 + b.wobble * Math.sin(t * 1.1 + b.phase));
+          const ry = breathe * (1 + b.wobble * Math.cos(t * 0.9 + b.phase + 1));
+
+          const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, Math.max(rx, ry));
+          grad.addColorStop(0,   `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.32)`);
+          grad.addColorStop(0.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.12)`);
+          grad.addColorStop(0.7, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.04)`);
+          grad.addColorStop(1,   `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          ctx.rotate(b.rot);
+          ctx.scale(rx / breathe, ry / breathe);
+          ctx.beginPath();
+          ctx.arc(0, 0, breathe, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+          ctx.restore();
+
+          // Move with gentle wrap
+          b.x += b.vx;
+          b.y += b.vy;
+          const pad = b.r * 1.5;
+          if (b.x < -pad) b.x = W + pad;
+          if (b.x > W + pad) b.x = -pad;
+          if (b.y < -pad) b.y = H + pad;
+          if (b.y > H + pad) b.y = -pad;
+        });
+
+        // Radial vignette
+        const vig = ctx.createRadialGradient(W/2, H/2, H * 0.05, W/2, H/2, W * 0.9);
+        vig.addColorStop(0, 'rgba(6,6,15,0)');
+        vig.addColorStop(1, 'rgba(6,6,15,0.75)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, W, H);
+
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    const palette = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+
+    FluidBg('fluid-canvas',   { count: 7, speed: 0.42, minR: 100, maxR: 260, colors: palette });
+    FluidBg('divider-canvas', { count: 5, speed: 0.65, minR: 60,  maxR: 150, colors: palette });
+  </script>
+</body>
+</html>

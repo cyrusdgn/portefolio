@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Veille Juridique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #06060f; --surface: #0d0d1e; --blue: #2d2dff; --blue-glow: #4f4fff;
+      --purple: #8b5cf6; --pink: #c084fc; --text: #f0f0f8; --muted: #7d7d9a;
+      --border: rgba(255,255,255,0.07);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(6,6,15,0.75); backdrop-filter: blur(22px); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* HERO */
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-pill-link { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); color: var(--muted); text-decoration: none; font-size: 0.8rem; padding: 0.45rem 1.1rem; border-radius: 100px; transition: background 0.2s, color 0.2s; margin-top: 0.25rem; }
+    .hero-pill-link:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    /* CONTENT */
+    .page-content { max-width: 860px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+
+    /* DEFINITION */
+    .def-block { margin-bottom: 4rem; }
+    .def-block h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
+    .def-text { font-size: 0.96rem; color: var(--muted); line-height: 1.9; text-align: center; max-width: 680px; margin: 0 auto 1.5rem; }
+    .def-text strong { color: var(--text); font-weight: 500; }
+
+    /* Image placeholder */
+    .alerts-img-placeholder { max-width: 520px; margin: 0 auto; background: var(--surface); border: 1px dashed rgba(255,255,255,0.15); border-radius: 12px; padding: 2.5rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; text-align: center; }
+    .alerts-img-placeholder p { font-size: 0.88rem; color: var(--muted); font-weight: 500; }
+    .alerts-img-placeholder span { font-size: 0.75rem; color: rgba(255,255,255,0.2); }
+
+    /* SEPARATOR */
+    .sep { height: 1px; background: var(--border); margin: 3.5rem 0; }
+
+    /* SUJET */
+    .sujet-block { margin-bottom: 4rem; }
+    .sujet-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; text-align: center; }
+    .sujet-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; line-height: 1.15; margin-bottom: 2rem; text-align: center; }
+    .sujet-title span { display: block; font-size: clamp(1.6rem, 3.5vw, 2.5rem); }
+
+    /* Content blocks */
+    .content-block { margin-bottom: 1.25rem; text-align: center; }
+    .content-block h3 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; }
+    .content-block p { font-size: 0.94rem; color: var(--muted); line-height: 1.75; margin-bottom: 0.4rem; }
+    .content-block p:last-child { margin-bottom: 0; }
+    .content-block p strong { color: var(--text); font-weight: 500; }
+
+    /* Articles */
+    .articles-intro { font-size: 0.94rem; color: var(--muted); text-align: center; margin-bottom: 1.75rem; }
+    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .article-card { display: block; text-decoration: none; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.25rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .article-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(45,45,255,0.08) 0%, transparent 65%); opacity: 0; transition: opacity 0.3s; }
+    .article-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.3); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+    .article-card:hover::before { opacity: 1; }
+    .article-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
+    .article-icon { width: 44px; height: 44px; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; margin-bottom: 1rem; }
+    .article-label { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
+    .article-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+    .article-arrow { position: absolute; bottom: 1.25rem; right: 1.25rem; color: var(--blue); font-size: 0.9rem; opacity: 0; transform: translateX(-4px); transition: opacity 0.2s, transform 0.2s; }
+    .article-card:hover .article-arrow { opacity: 1; transform: translateX(0); }
+
+    /* FLUID DIVIDER */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
+    .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .page-content { padding: 3rem 1.5rem 4rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>À propos <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li><a href="bts.html">BTS</a></li>
+      <li><a href="tcs.html">TCS</a></li>
+      <li>
+        <button>Mes Projets <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="dossiers.html">Dossiers</a></li>
+          <li><a href="projets.html">Projets et Procédures</a></li>
+        </ul>
+      </li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille Informatique</a></li>
+          <li><a href="veille-juridique.html" class="active-sub">Veille Juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Veilles · BTS SIO SISR</span>
+      <h1>Veille <span class="grad">Juridique</span></h1>
+      <a href="veille-info.html" class="hero-pill-link">
+        Voir section Informatique
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="page-content">
+
+    <!-- Définition -->
+    <div class="def-block">
+      <h2>Qu'est-ce qu'une Veille ?</h2>
+      <p class="def-text">La <strong>veille juridique</strong> désigne un processus permanent qui vise à rester informé des évolutions dans les domaines législatif, réglementaire, jurisprudentiel et doctrinal. Contrairement à une simple recherche ponctuelle, il s'agit d'une surveillance continue permettant de suivre les changements susceptibles d'impacter une activité ou un secteur.</p>
+      <p class="def-text">La <strong>veille technologique</strong>, quant à elle, consiste à observer de manière continue les innovations et les avancées techniques dans un domaine spécifique. Elle permet d'anticiper les évolutions, d'identifier les nouvelles opportunités et de maintenir un avantage concurrentiel.</p>
+      <p class="def-text" style="margin-bottom:1.5rem;">Le service <strong>Google Alerts</strong> me permet de recevoir en temps réel les nouveautés liées aux sujets que je surveille en vue d'actualiser mes veilles.</p>
+
+      <div class="alerts-img-placeholder">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>Image Google Alerts à insérer</p>
+        <span>Remplace src="ton-image.png" dans le code</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Sujet -->
+    <div class="sujet-block">
+      <p class="sujet-eyebrow">Sujet de veille juridique</p>
+      <h2 class="sujet-title">Le droit du travail à distance<span>(télétravail)</span></h2>
+
+      <div class="content-block">
+        <h3>Définition :</h3>
+        <p>Selon l'Article L1222-9 du Code du travail, le droit du travail à distance régit les conditions dans lesquelles un salarié peut effectuer son travail hors des locaux de l'employeur, depuis son domicile. Le télétravail doit respecter les règles protectrices du salarié, tout en garantissant les obligations de l'employeur.</p>
+      </div>
+
+      <div class="content-block">
+        <h3>Principaux aspects juridiques :</h3>
+        <p>Il doit premièrement exister un accord entre employeur et salarié : le télétravail repose sur un accord écrit, formalisé par contrat ou avenant, sauf en cas de circonstances exceptionnelles (ex : pandémie).</p>
+        <p>Chaque télétravailleur doit donc bénéficier des mêmes droits et avantages que les salariés présents sur site, et l'employeur doit garantir la santé, la sécurité et le respect de la vie privée du salarié. Par exemple pour éviter l'atteinte à la vie privée, des horaires précis et le respect des temps de repos doivent être assurés.</p>
+        <p>Selon les entreprises, l'employeur peut prendre en charge les équipements nécessaires ou indemnise le salarié ou non.</p>
+      </div>
+
+      <div class="content-block">
+        <h3>Exemple concret :</h3>
+        <p>Pendant la pandémie de COVID-19, de nombreuses entreprises ont instauré le télétravail obligatoire. Le gouvernement a publié des recommandations précises sur les modalités de mise en œuvre, tout en rappelant les obligations légales des employeurs, notamment concernant la sécurité des données et la prévention du risque psychosocial.</p>
+        <p>Aujourd'hui, le télétravail est largement adopté dans la plupart des entreprises. Dans la mienne, il est possible d'obtenir 2 à 3 jours de télétravail par semaine, sous certaines conditions.</p>
+        <p>Pour bénéficier des 2 jours de télétravail, il faut travailler au minimum 3 jours sur site. Cependant, un aménagement peut être accordé, permettant jusqu'à 3 jours de télétravail afin de faciliter les déplacements des employés habitant loin ou ayant des responsabilités familiales. Cette mesure constitue une solution adaptée à leurs besoins.</p>
+        <p>Chaque salarié est responsable de son propre matériel informatique, qui doit être fonctionnel et adapté au travail à distance. L'entreprise fournit le matériel uniquement pour les journées travaillées sur site.</p>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Articles -->
+    <p class="articles-intro">Voici ci-dessous des articles récents concernant le télétravail</p>
+
+    <div class="articles-grid">
+
+      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
+        <div class="article-num">Article 01</div>
+        <div class="article-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="article-label">Article Télétravail</div>
+        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
+        <span class="article-arrow">→</span>
+      </a>
+
+      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
+        <div class="article-num">Article 02</div>
+        <div class="article-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="article-label">Article Télétravail</div>
+        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
+        <span class="article-arrow">→</span>
+      </a>
+
+      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
+        <div class="article-num">Article 03</div>
+        <div class="article-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="article-label">Article Télétravail</div>
+        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
+        <span class="article-arrow">→</span>
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">Droit du Travail</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    function FluidBg(id, opts={}) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
+      let t=0;
+      (function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.fillStyle='#06060f'; ctx.fillRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(6,6,15,0)'); v.addColorStop(1,'rgba(6,6,15,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  </script>
+</body>
+</html>

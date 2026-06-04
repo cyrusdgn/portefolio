@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — À propos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0714;
+      --surface:   #110d22;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #e8dfff;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.15rem 3rem;
+      background: rgba(6,6,15,0.75);
+      backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 0.78rem 3rem; }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+
+    .nav-links > li > a,
+    .nav-links > li > button {
+      color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400;
+      letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 0.22rem;
+      transition: color 0.18s, background 0.18s;
+      cursor: pointer; background: none; border: none;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    }
+    .nav-links > li > a:hover,
+    .nav-links > li > button:hover,
+    .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+
+    .chev {
+      width: 9px; height: 9px; stroke: currentColor; fill: none;
+      stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.22s;
+    }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+
+    .nav-drop {
+      position: absolute; top: 100%; left: 0; min-width: 180px;
+      background: rgba(10,10,24,0.97);
+      border: 1px solid rgba(255,255,255,0.09); border-radius: 10px;
+      backdrop-filter: blur(28px); padding: 0.45rem; list-style: none;
+      opacity: 0; pointer-events: none; transform: translateY(7px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 400;
+    }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a {
+      display: block; padding: 0.48rem 0.88rem; color: var(--muted);
+      text-decoration: none; font-size: 0.815rem; border-radius: 7px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-drop li a:hover { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+
+    .nav-cta {
+      flex-shrink: 0; background: var(--blue); color: #fff; border: none;
+      padding: 0.52rem 1.25rem; border-radius: 6px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO BANNER ── */
+    .page-hero {
+      position: relative; overflow: hidden;
+      min-height: calc(100vh - 10rem);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2.2rem 2rem 0.8rem;
+    }
+
+    #hero-canvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
+    }
+
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 1;
+      background-image:
+        linear-gradient(rgba(45,45,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,45,255,0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-card {
+      position: relative; z-index: 10;
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 0;
+      text-align: center;
+    }
+
+    .hero-card h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800; line-height: 1;
+      letter-spacing: -0.03em; margin-bottom: 1rem;
+    }
+
+    .hero-card h1 .grad {
+      display: block;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      color: var(--muted); font-size: clamp(0.9rem, 1.8vw, 1rem);
+      font-weight: 300; letter-spacing: 0.025em;
+      margin: 0 auto 1.5rem;
+      max-width: 720px;
+    }
+
+    .hero-pills {
+      display: flex; justify-content: center; gap: 0.9rem; flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .pill-item {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 0.75rem; border-radius: 999px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text); font-size: 0.82rem; font-weight: 500;
+    }
+
+    .pill-icon {
+      width: 26px; height: 26px; display: grid; place-items: center;
+      border-radius: 10px; background: rgba(45,45,255,0.12);
+      color: #a5b4fc; font-size: 0.85rem;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .page-content {
+      padding-top: 0;
+      max-width: 860px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      padding-bottom: 6rem;
+    }
+
+    /* Section: À propos de moi */
+    .about-section {
+      margin: -4rem auto 5rem;
+      opacity: 0;
+      text-align: center;
+    }
+    .about-section.in-view { animation: fadeUp 0.6s ease forwards; }
+
+    .section-eyebrow {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 0.6rem;
+      text-align: center;
+    }
+
+    .section-heading {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 700; line-height: 1.1;
+      margin-bottom: 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    .about-paras {
+      display: flex; flex-direction: column; gap: 1.25rem;
+      max-width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+
+    .about-paras p {
+      font-size: 0.975rem; color: var(--muted); font-weight: 300;
+      line-height: 1.85;
+    }
+
+    .about-paras p strong {
+      color: var(--text); font-weight: 500;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline-section {
+      margin-bottom: 5rem;
+      opacity: 0;
+      text-align: center;
+    }
+
+    .timeline-section.in-view { animation: fadeUp 0.6s ease forwards 0.1s; }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      margin-top: 2rem;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    /* Vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 6px; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--blue), rgba(139,92,246,0.3), transparent);
+    }
+
+    .tl-item {
+      position: relative;
+      padding-bottom: 2.5rem;
+      padding-left: 1.5rem;
+      opacity: 0;
+    }
+    .tl-item.in-view { animation: fadeUp 0.5s ease forwards; }
+
+    /* Dot */
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem; top: 6px;
+      width: 9px; height: 9px;
+      background: var(--blue);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(45,45,255,0.7);
+      border: 2px solid var(--bg);
+    }
+
+    .tl-date {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+      color: var(--blue); text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .tl-place {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .tl-role {
+      font-size: 0.82rem; color: #a5b4fc; font-weight: 500;
+      margin-bottom: 0.55rem;
+    }
+
+    .tl-desc {
+      font-size: 0.875rem; color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .tl-bullets {
+      margin-top: 0.4rem;
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+
+    .tl-bullets li {
+      font-size: 0.865rem; color: var(--muted);
+      list-style: none; padding-left: 1rem; position: relative;
+    }
+    .tl-bullets li::before {
+      content: '→';
+      position: absolute; left: 0;
+      color: var(--blue); font-size: 0.7rem; top: 0.15rem;
+    }
+
+    /* ── CERTIFICATIONS ── */
+    #certifs {
+      text-align: center;
+      margin-bottom: 0;
+      margin-top: 5rem;
+    }
+    
+    #certifs .section-eyebrow {
+      text-align: center;
+    }
+    
+    #certifs .section-heading {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 600px;
+    }
+
+    .certif-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.4rem;
+      margin-top: 2rem;
+    }
+
+    .certif-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .certif-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at top left, rgba(45,45,255,0.1) 0%, transparent 65%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .certif-card:hover { transform: translateY(-6px); border-color: rgba(45,45,255,0.35); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+    .certif-card:hover::before { opacity: 1; }
+
+    .certif-badge {
+      width: 52px;
+      height: 52px;
+      background: rgba(45,45,255,0.12);
+      border: 1px solid rgba(45,45,255,0.25);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a5b4fc;
+      margin-bottom: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .certif-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .certif-num {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .certif-sub {
+      font-size: 0.7rem;
+      color: #a5b4fc;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .certif-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+    .certif-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .certif-tag {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+    }
+
+    .certif-arrow {
+      color: var(--blue); font-size: 1rem;
+      opacity: 0; transform: translateX(-4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .certif-card:hover .certif-arrow { opacity: 1; transform: translateX(0); }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%),
+        linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
+    }
+    .divider-text {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center; height: 100%;
+      font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800; color: rgba(255,255,255,0.055);
+      letter-spacing: 0.18em; text-transform: uppercase; user-select: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2.5rem 3rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon {
+      width: 38px; height: 38px; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border); border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-card { margin: 0 1.5rem; }
+      .page-content {
+        padding-top: 160px;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>À propos <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html" class="active-sub">À propos de moi</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li><a href="bts.html">BTS</a></li>
+      <li><a href="tcs.html">TCS</a></li>
+      <li>
+        <button>Mes Projets <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="dossiers.html">Dossiers</a></li>
+          <li><a href="projets.html">Projets et Procédures</a></li>
+        </ul>
+      </li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille Informatique</a></li>
+          <li><a href="veille-juridique.html">Veille Juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+  </nav>
+
+  <!-- HERO BANNER -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-grid"></div>
+
+    <div class="hero-card">
+      <h1>Cyrus<br><span class="grad">DEHGHAN</span></h1>
+      <p class="hero-subtitle">Étudiant en BTS SIO SISR, passionné par les infrastructures IT et les nouvelles technologies.</p>
+      <div class="hero-pills">
+        <div class="pill-item">
+          <span class="pill-icon">📍</span>
+          Marseille
+        </div>
+        <div class="pill-item">
+          <span class="pill-icon">⏱️</span>
+          21 ans
+        </div>
+        <div class="pill-item">
+          <span class="pill-icon">📅</span>
+          Année 2
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="page-content">
+
+    <!-- À propos de moi -->
+    <section class="about-section" id="about">
+      <p class="section-eyebrow">Qui suis-je</p>
+      <h2 class="section-heading">À propos de moi</h2>
+      <div class="about-paras">
+        <p>
+          Passionné par l'infrastructure et les technologies émergentes, j'ai fait le choix réfléchi de me spécialiser en <strong>BTS SIO option SISR</strong> après une licence pluridisciplinaire. Ce parcours reflète ma motivation pour les défis techniques, notamment en <strong>administration système, sécurité et virtualisation</strong>.
+        </p>
+        <p>
+          Fort d'une base solide acquise lors de ma formation initiale en informatique, j'aborde mon alternance actuelle avec des <strong>compétences techniques déjà diversifiées</strong>. Cette expérience professionnelle est cruciale pour consolider mes connaissances et nourrir mon ambition de poursuivre vers l'expertise technique.
+        </p>
+        <p>
+          Mon profil se distingue par une <strong>grande discipline</strong>, une motivation constante pour l'apprentissage, et une bonne maîtrise de l'anglais technique — des atouts fondamentaux pour évoluer dans le secteur IT.
+        </p>
+      </div>
+    </section>
+
+    <!-- Parcours scolaire -->
+    <section class="timeline-section" id="scolaire">
+      <p class="section-eyebrow">Formation</p>
+      <h2 class="section-heading">Mon Parcours Scolaire</h2>
+
+      <div class="timeline">
+
+        <div class="tl-item" id="tl1">
+          <div class="tl-date">2024 — 2026</div>
+          <div class="tl-place">ENSITECH, Marseille</div>
+          <div class="tl-role">BTS SIO — Solutions d'Infrastructures Systèmes & Réseaux</div>
+          <p class="tl-desc">BTS Services Informatiques aux Organisations, spécialisation SISR. Formation en alternance axée sur l'administration système, les réseaux et la sécurité informatique.</p>
+        </div>
+
+        <div class="tl-item" id="tl2">
+          <div class="tl-date">2023 — 2024</div>
+          <div class="tl-place">École La Plateforme, Marseille</div>
+          <div class="tl-role">Bachelor IT — Métiers et technologies du numérique · Réorientation</div>
+          <p class="tl-desc">Bases solides en informatique, développement web et application, cybersécurité et réseaux.</p>
+        </div>
+
+        <div class="tl-item" id="tl3">
+          <div class="tl-date">2021 — 2022</div>
+          <div class="tl-place">Lycée Honoré Daumier, Marseille</div>
+          <div class="tl-role">Baccalauréat Général</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Expériences professionnelles -->
+    <section class="timeline-section" id="xp">
+      <p class="section-eyebrow">Expériences</p>
+      <h2 class="section-heading">Expériences Professionnelles</h2>
+
+      <div class="timeline">
+
+        <div class="tl-item" id="tl4">
+          <div class="tl-date">2024 — 2026</div>
+          <div class="tl-place">Econocom France</div>
+          <div class="tl-role">Technicien Support Utilisateur — Alternant · Missionné chez Skeepers France</div>
+          <p class="tl-desc">Support technique utilisateur en environnement professionnel, déployé en mission externe chez Skeepers France dans le cadre du contrat d'alternance.</p>
+        </div>
+
+        <div class="tl-item" id="tl5">
+          <div class="tl-date">2019</div>
+          <div class="tl-place">Ponant Marseille</div>
+          <div class="tl-role">Technicien Informatique — Stage</div>
+          <ul class="tl-bullets">
+            <li>Installation de matériels et équipements informatiques</li>
+            <li>Connaissance des systèmes d'exploitation</li>
+            <li>Gestion de réseau et sécurité informatique</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Certifications Cisco -->
+    <section class="timeline-section" id="certifs">
+      <p class="section-eyebrow">Certifications</p>
+      <h2 class="section-heading">Certifications Cisco</h2>
+
+      <div class="certif-grid">
+
+        <a href="#" class="certif-card">
+          <div class="certif-badge">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="certif-num">01</div>
+          <div class="certif-title">CCNA 1</div>
+          <div class="certif-sub">Introduction to Networks</div>
+          <div class="certif-desc">Fondamentaux des réseaux, modèle OSI, adressage IP, protocoles de base et configuration d'équipements Cisco.</div>
+          <div class="certif-footer">
+            <span class="certif-tag">Cisco NetAcad</span>
+            <span class="certif-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="certif-card">
+          <div class="certif-badge">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="certif-num">02</div>
+          <div class="certif-title">CCNA 2</div>
+          <div class="certif-sub">Switching, Routing & Wireless</div>
+          <div class="certif-desc">Routage inter-VLAN, STP, EtherChannel, configuration de routeurs et commutateurs, protocoles de routage dynamique.</div>
+          <div class="certif-footer">
+            <span class="certif-tag">Cisco NetAcad</span>
+            <span class="certif-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="certif-card">
+          <div class="certif-badge">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="certif-num">03</div>
+          <div class="certif-title">CCNA 3</div>
+          <div class="certif-sub">Enterprise Networking & Security</div>
+          <div class="certif-desc">Réseaux WAN, sécurité réseau avancée, ACL, NAT, VPN et automatisation d'infrastructure d'entreprise.</div>
+          <div class="certif-footer">
+            <span class="certif-tag">Cisco NetAcad</span>
+            <span class="certif-arrow">→</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">BTS SIO SISR</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Navbar scroll ── */
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    /* ── Dropdown persistence ── */
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          const isOpen = item.classList.contains('open');
+          if (isOpen) {
+            item.classList.remove('open');
+          } else {
+            openItem();
+          }
+        });
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) {
+        navMenuItems.forEach(item => item.classList.remove('open'));
+      }
+    });
+
+    /* ── Scroll-reveal ── */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.about-section, .timeline-section, .tl-item').forEach(el => obs.observe(el));
+
+    /* ── Identity card reveal ── */
+    setTimeout(() => {
+      document.getElementById('id-card').style.opacity = '1';
+      document.getElementById('id-card').style.transform = 'translateY(50%)';
+    }, 100);
+
+    /* ── Fluid canvas ── */
+    function FluidBg(canvasId, opts = {}) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const {
+        count  = 6,
+        speed  = 0.5,
+        minR   = 80,
+        maxR   = 200,
+        colors = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#6d28d9'],
+      } = opts;
+
+      let W, H;
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      const ro = new ResizeObserver(resize);
+      ro.observe(canvas.parentElement);
+
+      function hex2rgb(hex) {
+        const v = parseInt(hex.slice(1), 16);
+        return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
+      }
+      const rgbs = colors.map(hex2rgb);
+
+      const blobs = Array.from({ length: count }, (_, i) => ({
+        x: Math.random() * (W || 800),
+        y: Math.random() * (H || 400),
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed,
+        r: minR + Math.random() * (maxR - minR),
+        color: colors[i % colors.length],
+        phase: Math.random() * Math.PI * 2,
+        breatheSpeed: 0.3 + Math.random() * 0.5,
+        wobble: 0.06 + Math.random() * 0.08,
+        rotSpeed: (Math.random() - 0.5) * 0.008,
+        rot: Math.random() * Math.PI * 2,
+      }));
+
+      let t = 0;
+      function tick() {
+        t += 0.012;
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+
+        ctx.fillStyle = '#06060f';
+        ctx.fillRect(0, 0, W, H);
+
+        blobs.forEach((b, i) => {
+          const rgb = rgbs[i % rgbs.length];
+          const breathe = b.r * (1 + 0.14 * Math.sin(t * b.breatheSpeed + b.phase));
+          b.rot += b.rotSpeed;
+          const rx = breathe * (1 + b.wobble * Math.sin(t * 1.1 + b.phase));
+          const ry = breathe * (1 + b.wobble * Math.cos(t * 0.9 + b.phase + 1));
+
+          const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, Math.max(rx, ry));
+          grad.addColorStop(0,    `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.32)`);
+          grad.addColorStop(0.35, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.12)`);
+          grad.addColorStop(0.7,  `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.04)`);
+          grad.addColorStop(1,    `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+
+          ctx.save();
+          ctx.translate(b.x, b.y); ctx.rotate(b.rot);
+          ctx.scale(rx / breathe, ry / breathe);
+          ctx.beginPath(); ctx.arc(0, 0, breathe, 0, Math.PI * 2);
+          ctx.fillStyle = grad; ctx.fill();
+          ctx.restore();
+
+          b.x += b.vx; b.y += b.vy;
+          const pad = b.r * 1.5;
+          if (b.x < -pad) b.x = W + pad; if (b.x > W + pad) b.x = -pad;
+          if (b.y < -pad) b.y = H + pad; if (b.y > H + pad) b.y = -pad;
+        });
+
+        const vig = ctx.createRadialGradient(W/2, H/2, H * 0.05, W/2, H/2, W * 0.9);
+        vig.addColorStop(0, 'rgba(6,6,15,0)');
+        vig.addColorStop(1, 'rgba(6,6,15,0.75)');
+        ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    const palette = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count: 6, speed: 0.38, minR: 80,  maxR: 220, colors: palette });
+    FluidBg('divider-canvas', { count: 5, speed: 0.65, minR: 60,  maxR: 150, colors: palette });
+
+    /* Staggered timeline items */
+    document.querySelectorAll('.tl-item').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.12}s`;
+    });
+  </script>
+</body>
+</html>

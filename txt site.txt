@@ -1,0 +1,3 @@
+-finir les en têtes
+-lier les pages
+-vérifier que tt les boutons marchent : LinkedIn, mail, boutons to pdf...

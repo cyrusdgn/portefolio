@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Mon Alternance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0714;
+      --surface:    #110d22;
+      --accent:     #2d2dff;
+      --accent-glow:#4f4fff;
+      --blue:       var(--accent);
+      --blue-glow:  var(--accent-glow);
+      --purple:     var(--accent);
+      --pink:       var(--accent);
+      --text:       #e8dfff;
+      --muted:      #7d7d9a;
+      --border:     rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 16px;
+      line-height: 1.65; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.15rem 3rem;
+      background: rgba(6,6,15,0.75); backdrop-filter: blur(22px);
+      border-bottom: 1px solid var(--border); transition: padding 0.3s;
+    }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button {
+      color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400;
+      letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 0.22rem;
+      transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none;
+      font-family: 'DM Sans', sans-serif; white-space: nowrap;
+    }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop {
+      position: absolute; top: 100%; left: 0; min-width: 180px;
+      background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none;
+      opacity: 0; pointer-events: none; transform: translateY(7px);
+      transition: opacity 0.2s, transform 0.2s; z-index: 400;
+    }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO BANNER ── */
+    .page-hero {
+      position: relative; overflow: hidden;
+      min-height: 460px; display: flex; align-items: flex-start; justify-content: center;
+      padding: 6rem 2rem 2rem;
+    }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+
+    /* Hero card */
+    .hero-card {
+      position: relative; z-index: 10;
+      width: min(100%, 860px);
+      margin: 0 auto;
+      transform: none;
+      background: transparent;
+      backdrop-filter: none;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      text-align: center;
+      box-shadow: none;
+    }
+    .hero-icon-box {
+      width: 68px; height: 68px;
+      margin: 0 auto 1rem;
+      display: grid; place-items: center;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(45,45,255,0.24), rgba(45,45,255,0.16));
+      box-shadow: 0 18px 40px rgba(45,45,255,0.16);
+    }
+    .hero-badges {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.5rem;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.65rem 1rem; border-radius: 999px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text); font-size: 0.9rem; font-weight: 500;
+    }
+    .hero-card > * { width: 100%; }
+    .hero-card p, .hero-meta, .hero-btns { max-width: 720px; margin: 0 auto; }
+    .hero-btns { display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; width: 100%; }
+
+    .hero-eyebrow {
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 0.85rem;
+    }
+    .hero-card h1 {
+      font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.1rem);
+      font-weight: 800; margin-bottom: 1.4rem; letter-spacing: -0.03em;
+      line-height: 1.05;
+    }
+    .hero-desc {
+      font-size: 1rem; color: var(--muted); line-height: 2;
+      margin-bottom: 4.4rem;
+    }
+
+    .hero-meta {
+      display: grid; grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 0.05rem; justify-items: center;
+      margin: 0 auto 1.75rem; padding-top: 0.75rem;
+      max-width: 340px;
+    }
+    .meta-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; color: var(--muted); font-size: 0.8rem; }
+    .meta-icon {
+      width: 38px; height: 38px;
+      background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc;
+    }
+    .meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .meta-value { font-size: 0.85rem; color: var(--text); font-weight: 500; }
+
+    .hero-btns {
+      display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; width: 100%;
+    }
+    .btn-pdf {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.6rem; border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .btn-pdf.primary { background: var(--blue); color: #fff; border: none; box-shadow: 0 4px 20px rgba(45,45,255,0.35); }
+    .btn-pdf.primary:hover { background: var(--blue-glow); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(45,45,255,0.5); }
+    .btn-pdf.secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); }
+    .btn-pdf.secondary:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+
+    /* ── MAIN CONTENT ── */
+    .page-content {
+      padding-top: 90px;
+      max-width: 1000px; margin: 0 auto;
+      padding-left: 2rem; padding-right: 2rem; padding-bottom: 6rem;
+    }
+
+    /* ── COMPANY SECTION ── */
+    .company-section {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 3rem; align-items: start;
+      margin-bottom: 5rem; opacity: 0;
+    }
+    .company-section.in-view { animation: fadeUp 0.6s ease forwards; }
+
+    .section-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.25rem; }
+
+    .company-text p { font-size: 0.96rem; color: var(--muted); line-height: 1.85; margin-bottom: 1rem; }
+    .company-text p strong { color: var(--text); font-weight: 500; }
+
+    .company-logo-box {
+      width: 200px; height: 140px; flex-shrink: 0;
+      border-radius: 16px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .logo-econocom { background: #5a0082; color: rgba(255,255,255,0.9); }
+    .logo-skeepers  { background: #1a6fff; color: #fff; }
+
+    .btn-more {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 1rem; font-size: 0.83rem; font-weight: 500;
+      color: var(--blue); text-decoration: none;
+      border: 1px solid rgba(45,45,255,0.3); padding: 0.45rem 1rem;
+      border-radius: 7px; transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-more:hover { background: rgba(45,45,255,0.1); border-color: rgba(45,45,255,0.5); }
+
+    /* ── MISSIONS GRID ── */
+    .full-section { margin-bottom: 5rem; opacity: 0; }
+    .full-section.in-view { animation: fadeUp 0.6s ease forwards 0.1s; }
+
+    .section-intro { font-size: 0.93rem; color: var(--muted); max-width: 600px; margin-bottom: 2.5rem; line-height: 1.75; }
+
+    .missions-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.4rem;
+    }
+
+    .mission-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.75rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 0.85rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+    .full-section.in-view .mission-card:nth-child(1) { animation: fadeUp 0.45s ease forwards 0.25s; }
+    .full-section.in-view .mission-card:nth-child(2) { animation: fadeUp 0.45s ease forwards 0.35s; }
+    .full-section.in-view .mission-card:nth-child(3) { animation: fadeUp 0.45s ease forwards 0.45s; }
+    .full-section.in-view .mission-card:nth-child(4) { animation: fadeUp 0.45s ease forwards 0.55s; }
+    .full-section.in-view .mission-card:nth-child(5) { animation: fadeUp 0.45s ease forwards 0.65s; }
+    .full-section.in-view .mission-card:nth-child(6) { animation: fadeUp 0.45s ease forwards 0.75s; }
+
+    .mission-card:hover, .tool-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.28); box-shadow: 0 18px 55px rgba(0,0,0,0.45); }
+
+    .mission-icon-wrap {
+      width: 76px; height: 76px; border-radius: 50%;
+      overflow: hidden; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(45,45,255,0.08); flex-shrink: 0;
+      font-size: 2rem;
+    }
+    .mission-icon-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    .mission-title { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 700; }
+    .mission-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; flex: 1; }
+
+    /* ── TOOLS GRID ── */
+    .tools-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.4rem;
+    }
+
+    .tool-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.75rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 0.75rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+    .full-section.in-view .tool-card:nth-child(1) { animation: fadeUp 0.45s ease forwards 0.25s; }
+    .full-section.in-view .tool-card:nth-child(2) { animation: fadeUp 0.45s ease forwards 0.35s; }
+    .full-section.in-view .tool-card:nth-child(3) { animation: fadeUp 0.45s ease forwards 0.45s; }
+    .full-section.in-view .tool-card:nth-child(4) { animation: fadeUp 0.45s ease forwards 0.55s; }
+    .full-section.in-view .tool-card:nth-child(5) { animation: fadeUp 0.45s ease forwards 0.65s; }
+    .full-section.in-view .tool-card:nth-child(6) { animation: fadeUp 0.45s ease forwards 0.75s; }
+
+    .tool-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.28); box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
+
+    .tool-logo {
+      width: 88px; height: 88px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 800;
+      letter-spacing: 0.03em; text-align: center; line-height: 1.2;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    .tool-logo.glpi     { background: #2c3e7a; color: #7fb3ff; font-size: 1.05rem; }
+    .tool-logo.atlas    { background: #0052cc; color: #fff; font-size: 0.85rem; }
+    .tool-logo.azure    { background: linear-gradient(135deg, #0072c6, #6e2fc0); color: #fff; font-size: 0.8rem; }
+    .tool-logo.omada    { background: #007a6e; color: #fff; font-size: 0.82rem; }
+    .tool-logo.boxtal   { background: #111; color: #fff; font-size: 0.88rem; }
+    .tool-logo.aircall  { background: #00b388; color: #fff; font-size: 0.85rem; }
+
+    .tool-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+    .tool-desc { font-size: 0.855rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%),
+                  linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%);
+    }
+    .divider-text {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center; height: 100%;
+      font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800; color: rgba(255,255,255,0.055);
+      letter-spacing: 0.18em; text-transform: uppercase; user-select: none;
+    }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    /* divider between company blocks */
+    .separator { height: 1px; background: var(--border); margin: 4rem 0; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .company-section { grid-template-columns: 1fr; }
+      .company-logo-box { width: 100%; height: 120px; }
+      .hero-meta, .hero-btns { grid-template-columns: 1fr; }
+      .page-content { padding-top: 160px; padding-left: 1.5rem; padding-right: 1.5rem; }
+      footer { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>À propos <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="alternance.html" class="active-sub">Alternance</a></li>
+        </ul>
+      </li>
+      <li><a href="bts.html">BTS</a></li>
+      <li><a href="tcs.html">TCS</a></li>
+      <li>
+        <button>Mes Projets <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="dossiers.html">Dossiers</a></li>
+          <li><a href="projets.html">Projets et Procédures</a></li>
+        </ul>
+      </li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille Informatique</a></li>
+          <li><a href="veille-juridique.html">Veille Juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-card" id="hero-card">
+      <p class="hero-eyebrow">À propos · Alternance</p>
+      <h1>Mon Alternance</h1>
+      <p class="hero-desc">Actuellement Alternant Technicien Support Utilisateur chez <strong style="color:var(--text)">Econocom France</strong>, en mission chez <strong style="color:var(--text)">Skeepers</strong>. Cette expérience me permet de découvrir le monde professionnel et d'approfondir les compétences acquises dans le cadre de mon <strong style="color:var(--text)">BTS SIO option SISR</strong>.</p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="meta-label">Période</span>
+          <span class="meta-value">Sept. 2024 — Août 2026</span>
+        </div>
+        <div class="meta-item">
+          <div class="meta-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="meta-label">Lieu</span>
+          <span class="meta-value">Marseille</span>
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="#missions" class="btn-pdf primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Mes missions
+        </a>
+        <a href="#logiciels" class="btn-pdf secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Logiciels et Outils
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="page-content">
+
+    <!-- Econocom -->
+    <section class="company-section" id="econocom">
+      <div class="company-text">
+        <p class="section-eyebrow">Entreprise d'accueil</p>
+        <h2 class="section-heading">À propos d'Econocom France</h2>
+        <p>
+          <strong>Econocom</strong> est un acteur majeur européen de la transformation digitale des entreprises. L'entreprise se positionne comme l'Entreprise Générale du Digital et propose une offre complète couvrant l'ensemble du cycle de vie des équipements numériques.
+        </p>
+        <p>
+          En résumé, Econocom accompagne les grandes entreprises et organisations dans le choix, le financement et la gestion de leurs équipements et projets informatiques complexes.
+        </p>
+        <a href="https://www.econocom.com" target="_blank" class="btn-more">
+          En savoir plus
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div>
+        <div class="company-logo-box logo-econocom">econocom</div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- Skeepers -->
+    <section class="company-section" id="skeepers">
+      <div class="company-text">
+        <p class="section-eyebrow">Lieu de mission</p>
+        <h2 class="section-heading">À propos de Skeepers — Ma Mission</h2>
+        <p>
+          <strong>Skeepers</strong> est une entreprise technologique spécialisée dans les solutions <strong>SaaS</strong> (Software as a Service). Elle fournit aux marques une suite logicielle en réunissant des équipes de développeurs, de commerciaux et d'autres profils tech pour proposer des solutions innovantes.
+        </p>
+        <p>
+          En tant que <strong>Support IT</strong>, j'assure le bon fonctionnement et la gestion du parc informatique pour l'ensemble des bureaux Skeepers répartis dans plusieurs grandes villes françaises — Marseille, Paris, Toulouse, Nantes, Rennes — ainsi qu'à l'international, notamment à Madrid et en Italie.
+        </p>
+        <a href="https://www.skeepers.io" target="_blank" class="btn-more">
+          En savoir plus
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div>
+        <div class="company-logo-box logo-skeepers" style="font-size:2.5rem; letter-spacing:0;">
+          <svg width="64" height="64" viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="22" fill="rgba(255,255,255,0.15)"/>
+            <path d="M20 30 Q30 16 40 30 Q30 44 20 30Z" fill="white" opacity="0.9"/>
+            <circle cx="30" cy="30" r="6" fill="#1a6fff"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- Mes Missions -->
+    <section class="full-section" id="missions">
+      <p class="section-eyebrow" style="text-align:center;">Activités</p>
+      <h2 class="section-heading" style="text-align:center;">Mes Missions en Entreprise</h2>
+      <p class="section-intro" style="text-align:center; margin-left:auto; margin-right:auto;">Un aperçu de mon quotidien d'Alternant Technicien Support Utilisateur en mission pour Econocom chez Skeepers.</p>
+
+      <div class="missions-grid">
+
+        <a class="mission-card" href="Dossiers/Organisation%20du%20Local%20Technique.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">🗄️</div>
+          <div class="mission-title">Organisation du Local Technique</div>
+          <div class="mission-desc">Organisation, gestion et suivi sécurisé du matériel dans le local technique — inventaire, étiquetage et rangement des équipements.</div>
+        </a>
+
+        <a class="mission-card" href="Dossiers/Ticketing%20Jira.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#0052cc"/><text x="50%" y="56%" text-anchor="middle" fill="white" font-size="18" font-family="Arial" font-weight="bold">J</text></svg>
+          </div>
+          <div class="mission-title">Ticketing (Jira)</div>
+          <div class="mission-desc">Suivi et gestion des demandes d'assistance utilisateurs via Jira — priorisation, résolution et documentation des incidents.</div>
+        </a>
+
+        <a class="mission-card" href="Dossiers/Revue%20Hebdomadaire.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">🔒</div>
+          <div class="mission-title">Revue Hebdomadaire</div>
+          <div class="mission-desc">Contrôle hebdomadaire rigoureux des étapes assurant la conformité, la sécurité et le stockage via les solutions Microsoft.</div>
+        </a>
+
+        <a class="mission-card" href="Dossiers/Installation%20d%27un%20Switch%208%20ports.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">🔌</div>
+          <div class="mission-title">Installation d'un Switch 8 ports</div>
+          <div class="mission-desc">Installation permettant d'offrir le réseau à un plus grand nombre d'utilisateurs — câblage, configuration et test de connectivité.</div>
+        </a>
+
+        <a class="mission-card" href="Dossiers/R%C3%A9organisation%20de%20deux%20baies%20et%20brassage%20vers%20PoE.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">🖧</div>
+          <div class="mission-title">Réorganisation de deux baies vers PoE</div>
+          <div class="mission-desc">Ajout d'un switch PoE et réorganisation de deux baies de réseau afin d'améliorer la qualité et la lisibilité du câblage.</div>
+        </a>
+
+        <a class="mission-card" href="Dossiers/Remplacement%20d%27un%20switch%20et%20brassage.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="mission-icon-wrap">🔧</div>
+          <div class="mission-title">Remplacement d'un switch et brassage</div>
+          <div class="mission-desc">Remplacement de câbles d'un switch 24P afin de dégager de l'espace dans la baie et optimiser la gestion des flux réseau.</div>
+        </a>
+
+      </div>
+    </section>
+
+    <div class="separator"></div>
+
+    <!-- Logiciels -->
+    <section class="full-section" id="logiciels">
+      <p class="section-eyebrow" style="text-align:center;">Outils</p>
+      <h2 class="section-heading" style="text-align:center;">Logiciels et Outils utilisés en Entreprise</h2>
+      <p class="section-intro" style="text-align:center; margin-left:auto; margin-right:auto;">Un aperçu des logiciels et outils utilisés durant mon alternance en tant que Technicien Support Utilisateur en mission pour Econocom chez Skeepers.</p>
+
+      <div class="tools-grid">
+
+        <a class="tool-card" href="Dossiers/GLPI.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo glpi">GLPI</div>
+          <div class="tool-name">GLPI</div>
+          <div class="tool-desc">Logiciel libre de gestion de parc informatique permettant de suivre et gérer les ressources informatiques.</div>
+        </a>
+
+        <a class="tool-card" href="Dossiers/Atlassian.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo atlas">
+            <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="20" fill="#0052cc"/><path d="M10 28 L18 12 L26 22 L21 22 L28 28" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </div>
+          <div class="tool-name">Atlassian</div>
+          <div class="tool-desc">Suite d'outils collaboratifs pour la gestion de projets, le suivi des tâches et la centralisation de la documentation d'équipe.</div>
+        </a>
+
+        <a class="tool-card" href="Dossiers/Services%20Microsoft%20Azure.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo azure">Azure</div>
+          <div class="tool-name">Microsoft Azure</div>
+          <div class="tool-desc">Service cloud de Microsoft permettant de gérer, sécuriser et administrer l'écosystème de l'entreprise.</div>
+        </a>
+
+        <a class="tool-card" href="Dossiers/Omada%20Cloud%20Management.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo omada">Omada</div>
+          <div class="tool-name">Omada (TP-Link)</div>
+          <div class="tool-desc">Solution de gestion centralisée des équipements réseau pour configurer, surveiller et sécuriser l'ensemble du réseau.</div>
+        </a>
+
+        <a class="tool-card" href="Dossiers/Boxtal.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo boxtal">BOXTAL</div>
+          <div class="tool-name">Boxtal</div>
+          <div class="tool-desc">Plateforme en ligne permettant de gérer et d'expédier des colis en comparant les transporteurs disponibles.</div>
+        </a>
+
+        <a class="tool-card" href="Dossiers/Aircall.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="tool-logo aircall">aircall</div>
+          <div class="tool-name">Aircall</div>
+          <div class="tool-desc">Solution de téléphonie cloud pour gérer les appels professionnels depuis un ordinateur ou smartphone, sans matériel dédié.</div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">Econocom · Skeepers</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Navbar ── */
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          const isOpen = item.classList.contains('open');
+          if (isOpen) {
+            item.classList.remove('open');
+          } else {
+            openItem();
+          }
+        });
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) {
+        navMenuItems.forEach(item => item.classList.remove('open'));
+      }
+    });
+
+    /* ── Scroll-reveal ── */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.company-section, .full-section').forEach(el => obs.observe(el));
+
+    /* ── Fluid canvas ── */
+    function FluidBg(canvasId, opts = {}) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#6d28d9'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({
+        x:Math.random()*(W||800), y:Math.random()*(H||400),
+        vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed,
+        r:minR+Math.random()*(maxR-minR), color:colors[i%colors.length],
+        phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5,
+        wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2
+      }));
+      let t=0;
+      function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.fillStyle='#0a0714'; ctx.fillRect(0,0,W,H);
+        blobs.forEach((b,i)=>{
+          const rgb=rgbs[i%rgbs.length];
+          const breathe=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=breathe*(1+b.wobble*Math.sin(t*1.1+b.phase));
+          const ry=breathe*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const grad=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          grad.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          grad.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          grad.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          grad.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot);
+          ctx.scale(rx/breathe,ry/breathe);
+          ctx.beginPath(); ctx.arc(0,0,breathe,0,Math.PI*2);
+          ctx.fillStyle=grad; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const pad=b.r*1.5;
+          if(b.x<-pad)b.x=W+pad; if(b.x>W+pad)b.x=-pad;
+          if(b.y<-pad)b.y=H+pad; if(b.y>H+pad)b.y=-pad;
+        });
+        const vig=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        vig.addColorStop(0,'rgba(6,6,15,0)'); vig.addColorStop(1,'rgba(6,6,15,.75)');
+        ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      }
+      tick();
+    }
+
+    const palette = ['#2d2dff','#3b56ff','#4f4fff','#5e71ff','#7386ff','#8ca0ff'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:palette });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:palette });
+  </script>
+</body>
+</html>

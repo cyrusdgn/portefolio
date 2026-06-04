@@ -101,7 +101,7 @@
     .rss-img-placeholder { width: 100%; height: 140px; background: rgba(45,45,255,0.06); display: flex; align-items: center; justify-content: center; color: var(--muted); }
     .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
     .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
     .rss-error { grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
@@ -343,31 +343,64 @@
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80, maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60, maxR:150, colors:pal });
 
-    /* RSS — Télétravail */
+    /* RSS — Télétravail, multi-proxy fallback */
     async function loadRSS() {
       const container = document.getElementById('rss-container');
-      const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=t%C3%A9l%C3%A9travail+droit+travail&hl=fr&gl=FR&ceid=FR:fr');
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&count=6`;
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
-        container.innerHTML = data.items.slice(0, 6).map(item => {
-          const date = new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-          const source = item.author || new URL(item.link).hostname.replace('www.','');
-          const img = item.enclosure?.link || item.thumbnail || '';
-          return `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
-            ${img ? `<div class="rss-card-img"><img src="${img}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`}
-            <div class="rss-card-body">
-              <span class="rss-source">${source}</span>
-              <div class="rss-card-title">${item.title}</div>
-              <div class="rss-card-date">${date}</div>
-            </div>
-          </a>`;
-        }).join('');
-      } catch(e) {
-        container.innerHTML = `<div class="rss-error"><p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités indisponibles</p><p>Le flux RSS fonctionnera une fois le site hébergé en ligne.</p></div>`;
+      const query = 't%C3%A9l%C3%A9travail+droit+travail';
+      const googleRSS = `https://news.google.com/rss/search?q=${query}&hl=fr&gl=FR&ceid=FR:fr`;
+
+      const proxies = [
+        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(googleRSS)}&count=6`,
+        `https://corsproxy.io/?${encodeURIComponent(googleRSS)}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent(googleRSS)}`
+      ];
+
+      function parseRss2json(data) {
+        if (data.status !== 'ok' || !data.items?.length) throw new Error('bad');
+        return data.items.slice(0, 6).map(item => ({
+          title: item.title, link: item.link,
+          source: item.author || new URL(item.link).hostname.replace('www.',''),
+          date: new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+          img: item.enclosure?.link || item.thumbnail || ''
+        }));
       }
+
+      function parseXML(xmlStr) {
+        const doc = new DOMParser().parseFromString(xmlStr, 'text/xml');
+        const items = Array.from(doc.querySelectorAll('item')).slice(0, 6);
+        if (!items.length) throw new Error('no items');
+        return items.map(el => {
+          const link = el.querySelector('link')?.textContent || el.querySelector('guid')?.textContent || '#';
+          let source = 'Google News';
+          try { source = new URL(link).hostname.replace('www.',''); } catch(e) {}
+          const pubDate = el.querySelector('pubDate')?.textContent || '';
+          const date = pubDate ? new Date(pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
+          return { title: el.querySelector('title')?.textContent || '', link, source, date, img: '' };
+        });
+      }
+
+      function renderCards(articles) {
+        container.innerHTML = articles.map(a => `
+          <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
+            ${a.img
+              ? `<div class="rss-card-img"><img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
+              : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`}
+            <div class="rss-card-body">
+              <span class="rss-source">${a.source}</span>
+              <div class="rss-card-title">${a.title}</div>
+              <div class="rss-card-date">${a.date}</div>
+            </div>
+          </a>`).join('');
+      }
+
+      try { const res = await fetch(proxies[0]); renderCards(parseRss2json(await res.json())); return; } catch(e) {}
+      try { const res = await fetch(proxies[1]); renderCards(parseXML(await res.text())); return; } catch(e) {}
+      try { const res = await fetch(proxies[2]); renderCards(parseXML((await res.json()).contents)); return; } catch(e) {}
+
+      container.innerHTML = `<div class="rss-error">
+        <p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités temporairement indisponibles</p>
+        <p>Les flux d'actualités sont inaccessibles pour le moment. Réessaie en rechargeant la page.</p>
+      </div>`;
     }
     loadRSS();
   </script>

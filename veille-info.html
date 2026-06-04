@@ -26,12 +26,10 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev,
-    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
     .nav-links > li { position: relative; }
     .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-links > li:hover .nav-drop,
-    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li:hover .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
@@ -123,7 +121,7 @@
 
     .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
 
     .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
@@ -348,40 +346,6 @@
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
-    const navMenuItems = document.querySelectorAll('.nav-links > li');
-    navMenuItems.forEach(item => {
-      let closeTimer = null;
-      const button = item.querySelector('button');
-      const openItem = () => {
-        clearTimeout(closeTimer);
-        navMenuItems.forEach(other => other.classList.remove('open'));
-        item.classList.add('open');
-      };
-      const closeItem = () => {
-        clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
-      };
-      item.addEventListener('mouseenter', openItem);
-      item.addEventListener('mouseleave', closeItem);
-      if (button) {
-        button.addEventListener('click', event => {
-          event.preventDefault();
-          const isOpen = item.classList.contains('open');
-          if (isOpen) {
-            item.classList.remove('open');
-          } else {
-            openItem();
-          }
-        });
-      }
-    });
-
-    document.addEventListener('click', event => {
-      if (!event.target.closest('.nav-links > li')) {
-        navMenuItems.forEach(item => item.classList.remove('open'));
-      }
-    });
-
     /* FLUID BG */
     function FluidBg(id, opts={}) {
       const canvas = document.getElementById(id);
@@ -407,43 +371,88 @@
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
 
-    /* RSS FEED — Cloud Computing via rss2json */
+    /* RSS FEED — Cloud Computing, multi-proxy fallback */
     async function loadRSS() {
       const container = document.getElementById('rss-container');
-      // Flux Google News pour "cloud computing"
-      const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=cloud+computing&hl=fr&gl=FR&ceid=FR:fr');
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&count=6`;
+      const query = 'cloud+computing';
+      const googleRSS = `https://news.google.com/rss/search?q=${query}&hl=fr&gl=FR&ceid=FR:fr`;
 
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
+      // Plusieurs proxies CORS en fallback
+      const proxies = [
+        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(googleRSS)}&count=6`,
+        `https://corsproxy.io/?${encodeURIComponent(googleRSS)}`,
+        `https://api.allorigins.win/get?url=${encodeURIComponent(googleRSS)}`
+      ];
 
-        if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
-
-        container.innerHTML = data.items.slice(0, 6).map(item => {
-          const date = new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
-          const source = item.author || new URL(item.link).hostname.replace('www.','');
-          const img = item.enclosure?.link || item.thumbnail || '';
-          return `
-            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
-              ${img
-                ? `<div class="rss-card-img"><img src="${img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:140px;background:rgba(45,45,255,0.06);display:flex;align-items:center;justify-content:center;\'><svg width=24 height=24 viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%237d7d9a\' stroke-width=\'1.5\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg></div>'"></div>`
-                : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`
-              }
-              <div class="rss-card-body">
-                <span class="rss-source">${source}</span>
-                <div class="rss-card-title">${item.title}</div>
-                <div class="rss-card-date">${date}</div>
-              </div>
-            </a>`;
-        }).join('');
-
-      } catch(e) {
-        container.innerHTML = `<div class="rss-error">
-          <p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités indisponibles</p>
-          <p>Le flux RSS ne peut pas être chargé en local. Il fonctionnera correctement une fois le site hébergé en ligne.</p>
-        </div>`;
+      function parseRss2json(data) {
+        if (data.status !== 'ok' || !data.items?.length) throw new Error('bad');
+        return data.items.slice(0, 6).map(item => ({
+          title: item.title,
+          link: item.link,
+          source: item.author || new URL(item.link).hostname.replace('www.',''),
+          date: new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+          img: item.enclosure?.link || item.thumbnail || ''
+        }));
       }
+
+      function parseXML(xmlStr) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xmlStr, 'text/xml');
+        const items = Array.from(doc.querySelectorAll('item')).slice(0, 6);
+        if (!items.length) throw new Error('no items');
+        return items.map(el => {
+          const link = el.querySelector('link')?.textContent || el.querySelector('guid')?.textContent || '#';
+          let source = 'Google News';
+          try { source = new URL(link).hostname.replace('www.',''); } catch(e) {}
+          const pubDate = el.querySelector('pubDate')?.textContent || '';
+          const date = pubDate ? new Date(pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
+          return { title: el.querySelector('title')?.textContent || '', link, source, date, img: '' };
+        });
+      }
+
+      function renderCards(articles) {
+        container.innerHTML = articles.map(a => `
+          <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
+            ${a.img
+              ? `<div class="rss-card-img"><img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
+              : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`}
+            <div class="rss-card-body">
+              <span class="rss-source">${a.source}</span>
+              <div class="rss-card-title">${a.title}</div>
+              <div class="rss-card-date">${a.date}</div>
+            </div>
+          </a>`).join('');
+      }
+
+      // Essai proxy 1 : rss2json
+      try {
+        const res = await fetch(proxies[0]);
+        const data = await res.json();
+        renderCards(parseRss2json(data));
+        return;
+      } catch(e) {}
+
+      // Essai proxy 2 : corsproxy.io (retourne XML brut)
+      try {
+        const res = await fetch(proxies[1]);
+        const text = await res.text();
+        renderCards(parseXML(text));
+        return;
+      } catch(e) {}
+
+      // Essai proxy 3 : allorigins (retourne { contents: "xml..." })
+      try {
+        const res = await fetch(proxies[2]);
+        const data = await res.json();
+        renderCards(parseXML(data.contents));
+        return;
+      } catch(e) {}
+
+      // Tous les proxies ont échoué
+      container.innerHTML = `<div class="rss-error">
+        <p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités temporairement indisponibles</p>
+        <p>Les flux d'actualités sont inaccessibles pour le moment. Réessaie en rechargeant la page.</p>
+      </div>`;
     }
     loadRSS();
   </script>

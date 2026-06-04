@@ -9,24 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #06060f;
-      --surface:   #0d0d1e;
-      --blue:      #2d2dff;
-      --blue-glow: #4f4fff;
-      --purple:    #8b5cf6;
-      --pink:      #c084fc;
-      --text:      #f0f0f8;
-      --muted:     #7d7d9a;
-      --border:    rgba(255,255,255,0.07);
+      --bg: #06060f; --surface: #0d0d1e; --blue: #2d2dff; --blue-glow: #4f4fff;
+      --purple: #8b5cf6; --pink: #c084fc; --text: #f0f0f8; --muted: #7d7d9a;
+      --border: rgba(255,255,255,0.07);
     }
-
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
-    /* ── NAV ── */
+    /* NAV */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(6,6,15,0.75); backdrop-filter: blur(22px); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
     nav.scrolled { padding: 0.78rem 3rem; }
     .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
@@ -34,78 +26,76 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev,
+    .nav-links > li.open .chev { transform: rotate(180deg); }
     .nav-links > li { position: relative; }
-    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-links > li:hover .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
     .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
 
-    /* ── HERO ── */
+    /* HERO */
     .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
     #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(6,6,15,0.62); }
     .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
     .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
-    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.975rem; color: var(--muted); line-height: 1.8; max-width: 540px; }
     .hero-pill-link { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); color: var(--muted); text-decoration: none; font-size: 0.8rem; padding: 0.45rem 1.1rem; border-radius: 100px; transition: background 0.2s, color 0.2s; margin-top: 0.25rem; }
     .hero-pill-link:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
 
-    /* ── CONTENT ── */
-    .page-content { max-width: 860px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+    /* CONTENT */
+    .page-content { max-width: 960px; margin: 0 auto; padding: 4rem 2rem 5rem; }
 
-    /* ── DEFINITION BLOCK ── */
+    /* DEFINITION */
     .def-block { margin-bottom: 4rem; }
     .def-block h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
-
-    .def-text { font-size: 0.96rem; color: var(--muted); line-height: 1.9; text-align: center; max-width: 680px; margin: 0 auto 1.5rem; }
+    .def-text { font-size: 0.96rem; color: var(--muted); line-height: 1.9; text-align: center; max-width: 680px; margin: 0 auto 1.25rem; }
     .def-text strong { color: var(--text); font-weight: 500; }
 
     /* Image placeholder */
-    .alerts-img-placeholder {
-      max-width: 520px; margin: 0 auto;
-      background: var(--surface); border: 1px dashed rgba(255,255,255,0.15);
-      border-radius: 12px; padding: 2.5rem 2rem;
-      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
-      text-align: center;
-    }
-    .alerts-img-placeholder p { font-size: 0.88rem; color: var(--muted); font-weight: 500; }
-    .alerts-img-placeholder span { font-size: 0.75rem; color: rgba(255,255,255,0.2); }
+    .img-placeholder { width: 100%; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; text-align: center; padding: 2.5rem; min-height: 200px; }
+    .img-placeholder p { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+    .img-placeholder span { font-size: 0.72rem; color: rgba(255,255,255,0.2); font-family: monospace; }
+    /* Real image */
+    .side-img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block; }
 
-    /* ── SEPARATOR ── */
+    /* SEP */
     .sep { height: 1px; background: var(--border); margin: 3.5rem 0; }
 
-    /* ── SUJET BLOCK ── */
-    .sujet-block { margin-bottom: 4rem; }
-    .sujet-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; text-align: center; }
-    .sujet-title { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; line-height: 1.15; margin-bottom: 2rem; text-align: center; }
-    .sujet-title span { display: block; font-size: clamp(1.6rem, 3.5vw, 2.5rem); }
+    /* SUJET — side by side layout */
+    .sujet-header { text-align: center; margin-bottom: 3rem; }
+    .sujet-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
+    .sujet-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
 
-    /* Content blocks */
-    .content-block { margin-bottom: 1.75rem; text-align: center; }
-    .content-block h3 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; }
-    .content-block p { font-size: 0.94rem; color: var(--muted); line-height: 1.85; }
-    .content-block p strong { color: var(--text); font-weight: 500; }
-
-    /* Articles intro */
-    .articles-intro { font-size: 0.94rem; color: var(--muted); text-align: center; margin-bottom: 1.75rem; }
-
-    /* Article link cards */
-    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-
-    .article-card {
-      display: block; text-decoration: none;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; padding: 1.5rem 1.25rem;
-      position: relative; overflow: hidden;
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    /* Content row: text left, image right */
+    .content-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
+      align-items: center; margin-bottom: 3rem;
     }
+    .content-row.reverse { direction: rtl; }
+    .content-row.reverse > * { direction: ltr; }
+
+    .content-text h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+    .content-text p { font-size: 0.93rem; color: var(--muted); line-height: 1.82; }
+    .content-text p strong { color: var(--text); font-weight: 500; }
+
+    .content-image { border-radius: 14px; overflow: hidden; min-height: 220px; }
+
+    /* Articles manuels */
+    .section-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; text-align: center; }
+    .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
+
+    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1rem; }
+    .article-card { display: block; text-decoration: none; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.25rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
     .article-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(45,45,255,0.08) 0%, transparent 65%); opacity: 0; transition: opacity 0.3s; }
     .article-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.3); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
     .article-card:hover::before { opacity: 1; }
-
     .article-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
     .article-icon { width: 44px; height: 44px; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; margin-bottom: 1rem; }
     .article-label { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
@@ -113,13 +103,39 @@
     .article-arrow { position: absolute; bottom: 1.25rem; right: 1.25rem; color: var(--blue); font-size: 0.9rem; opacity: 0; transform: translateX(-4px); transition: opacity 0.2s, transform 0.2s; }
     .article-card:hover .article-arrow { opacity: 1; transform: translateX(0); }
 
-    /* ── FLUID DIVIDER ── */
+    /* RSS NEWS SECTION */
+    .rss-section { margin-top: 4rem; }
+    .rss-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .rss-title-block .section-label { text-align: left; margin-bottom: 0.3rem; }
+    .rss-title-block .section-heading { text-align: left; margin-bottom: 0; }
+    .rss-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.25); color: #a5b4fc; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.3rem 0.8rem; border-radius: 100px; }
+    .rss-badge::before { content: ''; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 6px #22c55e; animation: blink 2s ease infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .rss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+    .rss-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .rss-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.3); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+
+    .rss-card-img { width: 100%; height: 140px; object-fit: cover; background: rgba(45,45,255,0.08); display: flex; align-items: center; justify-content: center; }
+    .rss-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .rss-img-placeholder { width: 100%; height: 140px; background: rgba(45,45,255,0.06); display: flex; align-items: center; justify-content: center; color: var(--muted); }
+
+    .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
+
+    .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
+    .rss-error { grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+
+    /* FLUID DIVIDER */
     .fluid-divider { height: 200px; position: relative; overflow: hidden; }
     #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
     .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
     .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
 
-    /* ── FOOTER ── */
+    /* FOOTER */
     footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
     .footer-links { display: flex; gap: 0.75rem; }
@@ -131,7 +147,9 @@
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
-      .articles-grid { grid-template-columns: 1fr; }
+      .content-row { grid-template-columns: 1fr; }
+      .content-row.reverse { direction: ltr; }
+      .articles-grid, .rss-grid { grid-template-columns: 1fr; }
       .page-content { padding: 3rem 1.5rem 4rem; }
       footer { padding: 2rem 1.5rem; }
     }
@@ -168,12 +186,13 @@
         </ul>
       </li>
     </ul>
-    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+    <button class="nav-cta">Me contacter</button>
   </nav>
 
   <!-- HERO -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
+    <div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">Veilles · BTS SIO SISR</span>
       <h1>Veille <span class="grad">Informatique</span></h1>
@@ -184,95 +203,126 @@
     </div>
   </section>
 
-  <!-- CONTENT -->
   <div class="page-content">
 
-    <!-- Définition -->
+    <!-- DÉFINITION -->
     <div class="def-block">
       <h2>Qu'est-ce qu'une Veille ?</h2>
+      <p class="def-text">La <strong>veille juridique</strong> désigne un processus permanent qui vise à rester informé des évolutions dans les domaines législatif, réglementaire, jurisprudentiel et doctrinal. Il s'agit d'une surveillance continue permettant de suivre les changements susceptibles d'impacter une activité ou un secteur.</p>
+      <p class="def-text">La <strong>veille technologique</strong> consiste à observer de manière continue les innovations et les avancées techniques dans un domaine spécifique. Elle permet d'anticiper les évolutions et d'identifier les nouvelles opportunités.</p>
+      <p class="def-text" style="margin-bottom:1.5rem;">Le service <strong>Google Alerts</strong> me permet de recevoir en temps réel les nouveautés liées aux sujets que je surveille.</p>
 
-      <p class="def-text">
-        La <strong>veille juridique</strong> désigne un processus permanent qui vise à rester informé des évolutions dans les domaines législatif, réglementaire, jurisprudentiel et doctrinal. Contrairement à une simple recherche ponctuelle, il s'agit d'une surveillance continue permettant de suivre les changements susceptibles d'impacter une activité ou un secteur.
-      </p>
-      <p class="def-text">
-        La <strong>veille technologique</strong>, quant à elle, consiste à observer de manière continue les innovations et les avancées techniques dans un domaine spécifique. Elle permet d'anticiper les évolutions, d'identifier les nouvelles opportunités et de maintenir un avantage concurrentiel.
-      </p>
-      <p class="def-text" style="margin-bottom:1.5rem;">
-        Le service <strong>Google Alerts</strong> me permet de recevoir en temps réel les nouveautés liées aux sujets que je surveille en vue d'actualiser mes veilles.
-      </p>
-
-      <!-- Image Google Alerts — remplace src par ton image -->
-      <div class="alerts-img-placeholder">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-        <p>Image Google Alerts à insérer</p>
-        <span>Remplace src="ton-image.png" dans le code</span>
+      <!-- Image Google Alerts côte à côte avec texte -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;max-width:700px;margin:0 auto;">
+        <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;">En paramétrant des alertes sur les mots-clés <strong style="color:var(--text)">« cloud computing »</strong> et <strong style="color:var(--text)">« télétravail »</strong>, je reçois automatiquement chaque jour les nouveaux articles publiés sur ces sujets, ce qui me permet de maintenir mes veilles à jour en temps réel.</p>
+        <div class="img-placeholder">
+          <!-- Remplace par : <img src="images/google-alerts.png" alt="Google Alerts" class="side-img"> -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Image Google Alerts</p>
+          <span>src="images/google-alerts.png"</span>
+        </div>
       </div>
-      <!-- Une fois prête : <img src="google-alerts.png" alt="Google Alerts" style="max-width:520px;width:100%;margin:0 auto;display:block;border-radius:12px;" /> -->
     </div>
 
     <div class="sep"></div>
 
-    <!-- Sujet -->
-    <div class="sujet-block">
+    <!-- SUJET -->
+    <div class="sujet-header">
       <p class="sujet-eyebrow">Sujet de veille informatique</p>
-      <h2 class="sujet-title">Le Cloud <span>Computing</span></h2>
+      <h2 class="sujet-title">Le Cloud <span class="grad">Computing</span></h2>
+    </div>
 
-      <div class="content-block">
+    <!-- RSS ACTUALITÉS AUTOMATIQUES -->
+    <div class="rss-section" style="margin-top:2.5rem;">
+      <div class="rss-header">
+        <div class="rss-title-block">
+          <p class="section-label" style="text-align:left;">Automatique · Temps réel</p>
+          <h2 class="section-heading" style="text-align:left;">Dernières actualités</h2>
+        </div>
+        <span class="rss-badge">En direct</span>
+      </div>
+      <div class="rss-grid" id="rss-container">
+        <div class="rss-loading">Chargement des actualités...</div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <!-- Définition : texte gauche, image droite -->
+    <div class="content-row">
+      <div class="content-text">
         <h3>Définition :</h3>
         <p>Le cloud computing est un modèle informatique qui permet d'accéder à des ressources informatiques (serveurs, stockage, bases de données, logiciels, etc.) via Internet, sans avoir à gérer directement l'infrastructure physique. Ces ressources sont hébergées sur des serveurs distants, souvent dans des centres de données sécurisés.</p>
       </div>
+      <div class="content-image">
+        <div class="img-placeholder">
+          <!-- Remplace par : <img src="images/cloud-definition.jpg" alt="Cloud Computing" class="side-img"> -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Image Définition</p>
+          <span>src="images/cloud-definition.jpg"</span>
+        </div>
+      </div>
+    </div>
 
-      <div class="content-block">
+    <!-- Utilisations : image gauche, texte droite -->
+    <div class="content-row reverse">
+      <div class="content-text">
         <h3>Utilisations principales :</h3>
         <p>Pour stocker et sauvegarder des données à distance, héberger des applications et des services en ligne, une adaptation dynamique selon les besoins (augmentation ou diminution des ressources) et la collaboration facilitée grâce à l'accès partagé et en temps réel pour tous les utilisateurs.</p>
       </div>
+      <div class="content-image">
+        <div class="img-placeholder">
+          <!-- Remplace par : <img src="images/cloud-utilisations.jpg" alt="Utilisations Cloud" class="side-img"> -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Image Utilisations</p>
+          <span>src="images/cloud-utilisations.jpg"</span>
+        </div>
+      </div>
+    </div>
 
-      <div class="content-block">
+    <!-- Exemple concret : texte gauche, image droite -->
+    <div class="content-row">
+      <div class="content-text">
         <h3>Exemple concret :</h3>
-        <p>Mon entreprise utilise <strong>SharePoint</strong>, une plateforme collaborative (SaaS — Software as a Service) qui s'appuie sur le cloud computing : cela permet de créer, stocker, organiser et partager des documents et des informations au sein de l'entreprise. Chaque jour, durant une revue journalière nous observons les potentiels pics de trafic, et nous pouvons facilement augmenter la capacité de ses serveurs sans investir dans du matériel supplémentaire. De plus, les employés peuvent accéder aux fichiers depuis différents lieux grâce à une simple connexion Internet, ce qui améliore la flexibilité et la collaboration.</p>
+        <p>Mon entreprise utilise <strong>SharePoint</strong>, une plateforme collaborative (SaaS — Software as a Service) qui s'appuie sur le cloud computing. Cela permet de créer, stocker, organiser et partager des documents au sein de l'entreprise. Durant nos revues journalières, nous pouvons facilement augmenter la capacité des serveurs sans investir dans du matériel supplémentaire. Les employés accèdent aux fichiers depuis n'importe où grâce à une simple connexion Internet.</p>
+      </div>
+      <div class="content-image">
+        <div class="img-placeholder">
+          <!-- Remplace par : <img src="images/sharepoint.jpg" alt="SharePoint" class="side-img"> -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p>Image Exemple concret</p>
+          <span>src="images/sharepoint.jpg"</span>
+        </div>
       </div>
     </div>
 
     <div class="sep"></div>
 
-    <!-- Articles -->
-    <p class="articles-intro">Voici ci-dessous des articles récents concernant le Cloud Computing</p>
-
+    <!-- ARTICLES MANUELS -->
+    <p class="section-label" style="text-align:center;">Sélection</p>
+    <h2 class="section-heading">Articles à consulter</h2>
     <div class="articles-grid">
-
-      <!-- Article 1 — remplace le href par ton lien -->
       <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
         <div class="article-num">Article 01</div>
-        <div class="article-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </div>
+        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
         <div class="article-label">Article Cloud Computing</div>
         <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
         <span class="article-arrow">→</span>
       </a>
-
-      <!-- Article 2 — remplace le href par ton lien -->
       <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
         <div class="article-num">Article 02</div>
-        <div class="article-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </div>
+        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
         <div class="article-label">Article Cloud Computing</div>
         <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
         <span class="article-arrow">→</span>
       </a>
-
-      <!-- Article 3 — remplace le href par ton lien -->
       <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
         <div class="article-num">Article 03</div>
-        <div class="article-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </div>
+        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
         <div class="article-label">Article Cloud Computing</div>
         <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
         <span class="article-arrow">→</span>
       </a>
-
     </div>
 
   </div>
@@ -288,19 +338,51 @@
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
-      </a>
-      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-      </a>
+      <a href="#" class="footer-icon" title="Email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></a>
+      <a href="#" class="footer-icon" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
     </div>
   </footer>
 
   <script>
+    /* NAV */
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          const isOpen = item.classList.contains('open');
+          if (isOpen) {
+            item.classList.remove('open');
+          } else {
+            openItem();
+          }
+        });
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) {
+        navMenuItems.forEach(item => item.classList.remove('open'));
+      }
+    });
+
+    /* FLUID BG */
     function FluidBg(id, opts={}) {
       const canvas = document.getElementById(id);
       if (!canvas) return;
@@ -308,8 +390,7 @@
       const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
       let W, H;
       function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
-      resize();
-      new ResizeObserver(resize).observe(canvas.parentElement);
+      resize(); new ResizeObserver(resize).observe(canvas.parentElement);
       function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
       const rgbs = colors.map(hex2rgb);
       const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
@@ -317,31 +398,54 @@
       (function tick() {
         t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
         ctx.fillStyle='#06060f'; ctx.fillRect(0,0,W,H);
-        blobs.forEach(b=>{
-          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
-          b.rot+=b.rotSpeed;
-          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
-          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
-          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
-          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
-          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
-          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
-          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
-          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
-          b.x+=b.vx; b.y+=b.vy;
-          const p=b.r*1.5;
-          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
-        });
-        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
-        v.addColorStop(0,'rgba(6,6,15,0)'); v.addColorStop(1,'rgba(6,6,15,.75)');
-        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        blobs.forEach(b=>{ const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase)); b.rot+=b.rotSpeed; const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1)); const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry)); g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`); g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`); g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`); g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`); ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br); ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore(); b.x+=b.vx; b.y+=b.vy; const p=b.r*1.5; if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p; });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9); v.addColorStop(0,'rgba(6,6,15,0)'); v.addColorStop(1,'rgba(6,6,15,.75)'); ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
         requestAnimationFrame(tick);
       })();
     }
-
     const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+
+    /* RSS FEED — Cloud Computing via rss2json */
+    async function loadRSS() {
+      const container = document.getElementById('rss-container');
+      // Flux Google News pour "cloud computing"
+      const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=cloud+computing&hl=fr&gl=FR&ceid=FR:fr');
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}&count=6`;
+
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
+
+        container.innerHTML = data.items.slice(0, 6).map(item => {
+          const date = new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' });
+          const source = item.author || new URL(item.link).hostname.replace('www.','');
+          const img = item.enclosure?.link || item.thumbnail || '';
+          return `
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
+              ${img
+                ? `<div class="rss-card-img"><img src="${img}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\'width:100%;height:140px;background:rgba(45,45,255,0.06);display:flex;align-items:center;justify-content:center;\'><svg width=24 height=24 viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%237d7d9a\' stroke-width=\'1.5\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg></div>'"></div>`
+                : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`
+              }
+              <div class="rss-card-body">
+                <span class="rss-source">${source}</span>
+                <div class="rss-card-title">${item.title}</div>
+                <div class="rss-card-date">${date}</div>
+              </div>
+            </a>`;
+        }).join('');
+
+      } catch(e) {
+        container.innerHTML = `<div class="rss-error">
+          <p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités indisponibles</p>
+          <p>Le flux RSS ne peut pas être chargé en local. Il fonctionnera correctement une fois le site hébergé en ligne.</p>
+        </div>`;
+      }
+    }
+    loadRSS();
   </script>
 </body>
 </html>

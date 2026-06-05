@@ -25,10 +25,9 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { /* hover disabled */ }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
     .nav-links > li { position: relative; }
     .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
@@ -101,7 +100,7 @@
     .rss-img-placeholder { width: 100%; height: 140px; background: rgba(45,45,255,0.06); display: flex; align-items: center; justify-content: center; color: var(--muted); }
     .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
     .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
     .rss-error { grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }

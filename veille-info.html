@@ -121,7 +121,7 @@
 
     .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
 
     .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
@@ -230,22 +230,6 @@
       <h2 class="sujet-title">Le Cloud <span class="grad">Computing</span></h2>
     </div>
 
-    <!-- RSS ACTUALITÉS AUTOMATIQUES -->
-    <div class="rss-section" style="margin-top:2.5rem;">
-      <div class="rss-header">
-        <div class="rss-title-block">
-          <p class="section-label" style="text-align:left;">Automatique · Temps réel</p>
-          <h2 class="section-heading" style="text-align:left;">Dernières actualités</h2>
-        </div>
-        <span class="rss-badge">En direct</span>
-      </div>
-      <div class="rss-grid" id="rss-container">
-        <div class="rss-loading">Chargement des actualités...</div>
-      </div>
-    </div>
-
-    <div class="sep"></div>
-
     <!-- Définition : texte gauche, image droite -->
     <div class="content-row">
       <div class="content-text">
@@ -296,31 +280,18 @@
 
     <div class="sep"></div>
 
-    <!-- ARTICLES MANUELS -->
-    <p class="section-label" style="text-align:center;">Sélection</p>
-    <h2 class="section-heading">Articles à consulter</h2>
-    <div class="articles-grid">
-      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
-        <div class="article-num">Article 01</div>
-        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
-        <div class="article-label">Article Cloud Computing</div>
-        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
-        <span class="article-arrow">→</span>
-      </a>
-      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
-        <div class="article-num">Article 02</div>
-        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
-        <div class="article-label">Article Cloud Computing</div>
-        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
-        <span class="article-arrow">→</span>
-      </a>
-      <a href="#" target="_blank" rel="noopener noreferrer" class="article-card">
-        <div class="article-num">Article 03</div>
-        <div class="article-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
-        <div class="article-label">Article Cloud Computing</div>
-        <div class="article-sub">Cliquez pour ouvrir l'article dans un nouvel onglet.</div>
-        <span class="article-arrow">→</span>
-      </a>
+    <!-- RSS ACTUALITÉS -->
+    <div class="rss-section">
+      <div class="rss-header">
+        <div class="rss-title-block">
+          <p class="section-label" style="text-align:left;">Automatique · Temps réel</p>
+          <h2 class="section-heading" style="text-align:left;">Dernières actualités</h2>
+        </div>
+        <span class="rss-badge">En direct</span>
+      </div>
+      <div class="rss-grid" id="rss-container">
+        <div class="rss-loading">Chargement des actualités...</div>
+      </div>
     </div>
 
   </div>
@@ -374,7 +345,7 @@
     /* RSS FEED — Cloud Computing, multi-proxy fallback */
     async function loadRSS() {
       const container = document.getElementById('rss-container');
-      const query = 'cloud+computing';
+      const query = 'cloud+computing+informatique';
       const googleRSS = `https://news.google.com/rss/search?q=${query}&hl=fr&gl=FR&ceid=FR:fr`;
 
       // Plusieurs proxies CORS en fallback

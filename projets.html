@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Projets scolaires et procédures techniques — architecture réseau, virtualisation, Active Directory, GLPI et plus." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyrus DEHGHAN — Projets et Procédures</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,6 +24,7 @@
     }
 
     html { scroll-behavior: smooth; }
+    ::selection { background: rgba(45,45,255,0.4); color: #fff; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
@@ -34,10 +36,10 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { /* hover disabled */ }
     .nav-links > li { position: relative; }
-    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-links > li:hover .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
@@ -46,9 +48,10 @@
     /* ── HERO ── */
     .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
     #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(6,6,15,0.62); }
     .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
     .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3.5rem, 9vw, 6.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
     .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .hero-content p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 500px; }
     .hero-scroll-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: var(--text); text-decoration: none; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; padding: 0.65rem 1.5rem; border-radius: 100px; transition: background 0.2s, border-color 0.2s; margin-top: 0.25rem; }
@@ -154,21 +157,12 @@
 
     /* Schema preview area */
     .schema-preview {
-      width: 100%;
+      width: 100%; height: 520px;
       background: #080818;
       display: flex; align-items: center; justify-content: center;
       position: relative; overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 20px;
     }
-    .schema-preview img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      padding: 0.75rem;
-      transition: transform 0.4s;
-      display: block;
-    }
+    .schema-preview img { width: 100%; height: 100%; object-fit: contain; padding: 1.5rem; transition: transform 0.4s; }
     .schema-card:hover .schema-preview img { transform: scale(1.02); }
 
     /* Placeholder grid lines when no image */
@@ -215,10 +209,22 @@
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
       .proc-grid { grid-template-columns: repeat(2, 1fr); }
-      .schema-preview { width: 100%; }
+      .schema-preview { height: 320px; }
       .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
       footer { padding: 2rem 1.5rem; }
     }
+  
+    /* ── DROPDOWN CLICK ── */
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+
+  
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-glow); outline-offset: 3px; border-radius: 4px; }
+  
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,45,255,0.4); }
   </style>
 </head>
 <body>
@@ -258,6 +264,7 @@
   <!-- HERO -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
+    <div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">Mes Projets · BTS SIO SISR</span>
       <h1>Projets et <span class="grad">Procédures</span></h1>
@@ -276,7 +283,7 @@
     <section class="schema-section" id="schema">
       <p class="sec-label">Infrastructure</p>
       <h2 class="sec-heading">Architecture Réseau</h2>
-      <a class="schema-card" href="Dossiers/schema-reseau.jfif" target="_blank" rel="noopener noreferrer">
+      <a class="schema-card" href="Dossiers/Schéma d'Infrastructure Réseau Salle.jpg" target="_blank" rel="noopener noreferrer">
         <div class="schema-bar">
           <div class="schema-bar-left">
             <div class="schema-icon">
@@ -284,13 +291,13 @@
             </div>
             <div>
               <div class="schema-filename">Architecture Réseau — Infrastructure IT</div>
-              <div class="schema-type">Schéma réseau · Image · Cliquez pour ouvrir</div>
+              <div class="schema-type">Schéma réseau · PDF · Cliquez pour ouvrir</div>
             </div>
           </div>
           <div class="schema-open-btn">Ouvrir <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
         </div>
         <div class="schema-preview">
-          <img src="Dossiers/schema-reseau.jfif" alt="Schéma d'infrastructure réseau" />
+          <img src="Dossiers/Schéma d'Infrastructure Réseau Salle.jpg" alt="Schéma d'infrastructure réseau" style="width:95%;height:auto;max-height:490px;object-fit:contain;border-radius:6px;" />
           <div class="schema-overlay">
             <div class="schema-overlay-circle"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
             <p>Ouvrir le schéma réseau</p>
@@ -309,8 +316,8 @@
 
       <div class="proc-grid">
 
-        <!-- Switch / Router / VLAN — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Switch%20-%20Router%20-%20VLAN.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- Switch / Router / VLAN — remplace proc-switch.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure Switch - Router - VLAN.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0d1b2a,#1a2f4a);">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(100,160,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="6" rx="1"/><circle cx="6" cy="9" r="1" fill="rgba(100,160,255,0.7)"/><circle cx="10" cy="9" r="1" fill="rgba(100,160,255,0.7)"/><path d="M6 12v6M10 12v6"/></svg>
@@ -326,7 +333,7 @@
           </div>
         </a>
 
-        <!-- Active Directory — fichier introuvable dans Dossiers, conserver lien actuel si nécessaire -->
+        <!-- Active Directory — remplace proc-ad.pdf -->
         <a class="proc-card" href="proc-ad.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0078d4,#005a9e);">
@@ -343,8 +350,8 @@
           </div>
         </a>
 
-        <!-- Exchange — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Exchange.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- Exchange — remplace proc-exchange.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure Exchange.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0072c6,#0050a0);">
               <span style="font-size:1.1rem; font-weight:800; color:rgba(255,255,255,0.85);">Exchange</span>
@@ -360,8 +367,8 @@
           </div>
         </a>
 
-        <!-- GLPI — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20GLPI.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- GLPI — remplace proc-glpi.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure GLPI.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#0da8e2,#0078a8);">
               <span style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.05em;">GLPI</span>
@@ -377,8 +384,8 @@
           </div>
         </a>
 
-        <!-- Zabbix — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- Zabbix — remplace proc-zabbix.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure Zabbix.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#cc0000,#990000);">
               <span style="font-size:1.1rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.08em;">ZABBIX</span>
@@ -394,8 +401,8 @@
           </div>
         </a>
 
-        <!-- UniFi — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20UniFi.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- UniFi — remplace proc-unifi.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure UniFi.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#006ac6,#004a96);">
               <span style="font-size:1rem; font-weight:800; color:rgba(255,255,255,0.9);">UniFi</span>
@@ -411,8 +418,8 @@
           </div>
         </a>
 
-        <!-- GPO — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20GPO.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- GPO — remplace proc-gpo.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure GPO.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
               <span style="font-size:0.85rem; font-weight:800; color:rgba(200,200,255,0.8); text-align:center; line-height:1.4;">Group Policy<br>Objects</span>
@@ -428,8 +435,8 @@
           </div>
         </a>
 
-        <!-- XiVO — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20XiVo.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- XiVO — remplace proc-xivo.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure XiVo.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a1a1a,#2a2a2a);">
               <span style="font-size:1.1rem; font-weight:900; color:rgba(255,140,0,0.9); letter-spacing:0.06em;">XIVO</span>
@@ -445,8 +452,8 @@
           </div>
         </a>
 
-        <!-- Artica — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20Artica.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- Artica — remplace proc-artica.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure Artica.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1b6b35,#134d26);">
               <span style="font-size:1rem; font-weight:800; color:rgba(255,255,255,0.85);">Artica</span>
@@ -462,8 +469,8 @@
           </div>
         </a>
 
-        <!-- DMZ — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20DMZ%20Zevenet%2C%20Hyperv%20et%20WEB1-2.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- DMZ — remplace proc-dmz.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure DMZ Zevenet, Hyperv et WEB1-2.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#2d0050,#4a007a);">
               <span style="font-size:0.82rem; font-weight:800; color:rgba(255,255,255,0.85); text-align:center; line-height:1.35; padding:0 0.5rem;">DMZ<br>Zevenet · Hyper-V<br>WEB1/2</span>
@@ -479,8 +486,8 @@
           </div>
         </a>
 
-        <!-- FOG — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20FOG.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- FOG — remplace proc-fog.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure FOG.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#006e7a,#004f58);">
               <span style="font-size:1.2rem; font-weight:900; color:rgba(255,255,255,0.9); letter-spacing:0.04em;">FOG</span>
@@ -496,8 +503,8 @@
           </div>
         </a>
 
-        <!-- VPN IKE v2 — fichier réel dans Dossiers -->
-        <a class="proc-card" href="Dossiers/Proc%C3%A9dure%20%20VPN%20-%20IKE%20v2.pdf" target="_blank" rel="noopener noreferrer">
+        <!-- VPN IKE v2 — remplace proc-vpn.pdf -->
+        <a class="proc-card" href="Dossiers/Procédure VPN - IKE v2.pdf" target="_blank" rel="noopener noreferrer">
           <div class="proc-img">
             <div class="proc-img-placeholder" style="background:linear-gradient(135deg,#1a3a5c,#0d2240);">
               <span style="font-size:0.85rem; font-weight:800; color:rgba(255,255,255,0.85); text-align:center; line-height:1.35;">VPN<br>IKE v2</span>
@@ -529,10 +536,10 @@
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+      <a href="#" class="footer-icon" title="Email">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
       </a>
-      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+      <a href="#" class="footer-icon" title="LinkedIn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
       </a>
     </div>
@@ -588,6 +595,21 @@
     const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  
+    /* ── Dropdown click toggle ── */
+    document.querySelectorAll('.nav-links > li > button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const li = btn.parentElement;
+        const isOpen = li.classList.contains('open');
+        document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+        if (!isOpen) li.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+    });
+
   </script>
 </body>
 </html>

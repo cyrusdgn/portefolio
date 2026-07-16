@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="À propos de Cyrus Dehghan — parcours scolaire, expériences professionnelles et certifications Cisco CCNA." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyrus DEHGHAN — À propos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,18 +12,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0a0714;
-      --surface:   #110d22;
+      --bg:        #06060f;
+      --surface:   #0d0d1e;
       --blue:      #2d2dff;
       --blue-glow: #4f4fff;
       --purple:    #8b5cf6;
       --pink:      #c084fc;
-      --text:      #e8dfff;
+      --text:      #f0f0f8;
       --muted:     #7d7d9a;
       --border:    rgba(255,255,255,0.07);
     }
 
     html { scroll-behavior: smooth; }
+    ::selection { background: rgba(45,45,255,0.4); color: #fff; }
 
     body {
       background: var(--bg);
@@ -77,20 +79,18 @@
       stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
       transition: transform 0.22s;
     }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { /* hover disabled */ }
     .nav-links > li { position: relative; }
 
     .nav-drop {
-      position: absolute; top: 100%; left: 0; min-width: 180px;
+      position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px;
       background: rgba(10,10,24,0.97);
       border: 1px solid rgba(255,255,255,0.09); border-radius: 10px;
       backdrop-filter: blur(28px); padding: 0.45rem; list-style: none;
       opacity: 0; pointer-events: none; transform: translateY(7px);
       transition: opacity 0.2s, transform 0.2s; z-index: 400;
     }
-    .nav-links > li:hover .nav-drop,
-    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
-    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a {
       display: block; padding: 0.48rem 0.88rem; color: var(--muted);
       text-decoration: none; font-size: 0.815rem; border-radius: 7px;
@@ -110,87 +110,38 @@
     /* ── HERO BANNER ── */
     .page-hero {
       position: relative; overflow: hidden;
-      min-height: calc(100vh - 10rem);
-      display: flex; align-items: center; justify-content: center;
-      padding: 2.2rem 2rem 0.8rem;
+      min-height: 380px; display: flex; align-items: center; justify-content: center;
+      padding: 8rem 2rem 4rem;
     }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(6,6,15,0.62); }
 
-    #hero-canvas {
-      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
+    .hero-content {
+      position: relative; z-index: 10; text-align: center; max-width: 720px;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
     }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.975rem; color: var(--muted); line-height: 1.8; max-width: 540px; }
 
-    .hero-grid {
-      position: absolute; inset: 0; z-index: 1;
-      background-image:
-        linear-gradient(rgba(45,45,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(45,45,255,0.03) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
-      pointer-events: none;
-    }
-
-    .hero-card {
-      position: relative; z-index: 10;
-      width: min(100%, 860px);
-      margin: 0 auto;
-      padding: 0;
-      text-align: center;
-    }
-
-    .hero-card h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2rem, 5vw, 3.4rem);
-      font-weight: 800; line-height: 1;
-      letter-spacing: -0.03em; margin-bottom: 1rem;
-    }
-
-    .hero-card h1 .grad {
-      display: block;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-subtitle {
-      color: var(--muted); font-size: clamp(0.9rem, 1.8vw, 1rem);
-      font-weight: 300; letter-spacing: 0.025em;
-      margin: 0 auto 1.5rem;
-      max-width: 720px;
-    }
-
-    .hero-pills {
-      display: flex; justify-content: center; gap: 0.9rem; flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-
-    .pill-item {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.45rem 0.75rem; border-radius: 999px;
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text); font-size: 0.82rem; font-weight: 500;
-    }
-
-    .pill-icon {
-      width: 26px; height: 26px; display: grid; place-items: center;
-      border-radius: 10px; background: rgba(45,45,255,0.12);
-      color: #a5b4fc; font-size: 0.85rem;
-    }
+    /* Pills infos */
+    .hero-pills { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .pill { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.82rem; }
+    .pill-icon { width: 32px; height: 32px; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
 
     /* ── MAIN CONTENT ── */
     .page-content {
-      padding-top: 0;
-      max-width: 860px;
-      margin: 0 auto;
-      padding-left: 2rem;
-      padding-right: 2rem;
-      padding-bottom: 6rem;
+      padding-top: 2rem;
+      max-width: 860px; margin: 0 auto;
+      padding-left: 2rem; padding-right: 2rem; padding-bottom: 6rem;
     }
 
     /* Section: À propos de moi */
     .about-section {
-      margin: -4rem auto 5rem;
+      margin-bottom: 5rem;
       opacity: 0;
-      text-align: center;
     }
     .about-section.in-view { animation: fadeUp 0.6s ease forwards; }
 
@@ -198,7 +149,6 @@
       font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em;
       text-transform: uppercase; color: var(--blue);
       margin-bottom: 0.6rem;
-      text-align: center;
     }
 
     .section-heading {
@@ -206,16 +156,10 @@
       font-size: clamp(1.7rem, 3.5vw, 2.5rem);
       font-weight: 700; line-height: 1.1;
       margin-bottom: 2rem;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 600px;
     }
 
     .about-paras {
       display: flex; flex-direction: column; gap: 1.25rem;
-      max-width: 100%;
-      text-align: center;
-      margin: 0;
     }
 
     .about-paras p {
@@ -231,19 +175,13 @@
     .timeline-section {
       margin-bottom: 5rem;
       opacity: 0;
-      text-align: center;
     }
-
     .timeline-section.in-view { animation: fadeUp 0.6s ease forwards 0.1s; }
 
     .timeline {
       position: relative;
       padding-left: 2rem;
       margin-top: 2rem;
-      max-width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
     }
 
     /* Vertical line */
@@ -313,23 +251,6 @@
     }
 
     /* ── CERTIFICATIONS ── */
-    #certifs {
-      text-align: center;
-      margin-bottom: 0;
-      margin-top: 5rem;
-    }
-    
-    #certifs .section-eyebrow {
-      text-align: center;
-    }
-    
-    #certifs .section-heading {
-      text-align: center;
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 600px;
-    }
-
     .certif-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -340,7 +261,7 @@
     .certif-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 1.75rem;
       text-decoration: none;
       color: inherit;
@@ -348,8 +269,13 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      opacity: 0;
     }
+    .timeline-section.in-view .certif-card:nth-child(1) { animation: fadeUp 0.5s ease forwards 0.3s; }
+    .timeline-section.in-view .certif-card:nth-child(2) { animation: fadeUp 0.5s ease forwards 0.44s; }
+    .timeline-section.in-view .certif-card:nth-child(3) { animation: fadeUp 0.5s ease forwards 0.58s; }
 
     .certif-card::before {
       content: '';
@@ -361,69 +287,51 @@
     .certif-card:hover::before { opacity: 1; }
 
     .certif-badge {
-      width: 52px;
-      height: 52px;
+      width: 52px; height: 52px;
       background: rgba(45,45,255,0.12);
       border: 1px solid rgba(45,45,255,0.25);
       border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       color: #a5b4fc;
       margin-bottom: 0.5rem;
-      flex-shrink: 0;
+    }
+
+    .certif-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem; font-weight: 800;
+      letter-spacing: 0.15em; color: var(--blue);
+      text-transform: uppercase;
     }
 
     .certif-title {
       font-family: 'Syne', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.25rem;
-    }
-
-    .certif-num {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--blue);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
+      font-size: 1.4rem; font-weight: 800;
+      letter-spacing: -0.01em;
     }
 
     .certif-sub {
-      font-size: 0.7rem;
-      color: #a5b4fc;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
+      font-size: 0.78rem; color: #a5b4fc; font-weight: 500;
+      letter-spacing: 0.02em; margin-bottom: 0.25rem;
     }
 
     .certif-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 1rem;
-      flex-grow: 1;
+      font-size: 0.855rem; color: var(--muted);
+      line-height: 1.65; flex: 1;
     }
+
     .certif-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: auto;
-      padding-top: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 0.85rem;
       border-top: 1px solid var(--border);
     }
 
     .certif-tag {
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      color: var(--muted);
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.06em; color: var(--muted);
       background: rgba(255,255,255,0.05);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+      padding: 0.25rem 0.65rem; border-radius: 100px;
+      border: 1px solid var(--border);
     }
 
     .certif-arrow {
@@ -472,14 +380,22 @@
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
-      .hero-card { margin: 0 1.5rem; }
-      .page-content {
-        padding-top: 160px;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
+      .identity-card { margin: 0 1.5rem; padding: 1.5rem; }
+      .page-content { padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem; }
       footer { padding: 2rem 1.5rem; }
     }
+  
+    /* ── DROPDOWN CLICK ── */
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+
+  
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-glow); outline-offset: 3px; border-radius: 4px; }
+  
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,45,255,0.4); }
   </style>
 </head>
 <body>
@@ -513,28 +429,29 @@
         </ul>
       </li>
     </ul>
-    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+    <button class="nav-cta">Me contacter</button>
   </nav>
 
   <!-- HERO BANNER -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-grid"></div>
+    <div class="hero-fade"></div>
 
-    <div class="hero-card">
-      <h1>Cyrus<br><span class="grad">DEHGHAN</span></h1>
-      <p class="hero-subtitle">Étudiant en BTS SIO SISR, passionné par les infrastructures IT et les nouvelles technologies.</p>
+    <div class="hero-content">
+      <span class="hero-eyebrow">À propos · BTS SIO SISR</span>
+      <h1>Cyrus <span class="grad">Dehghan</span></h1>
+      <p>Étudiant en BTS SIO SISR, passionné par les infrastructures IT et les nouvelles technologies.</p>
       <div class="hero-pills">
-        <div class="pill-item">
-          <span class="pill-icon">📍</span>
+        <div class="pill">
+          <div class="pill-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
           Marseille
         </div>
-        <div class="pill-item">
-          <span class="pill-icon">⏱️</span>
+        <div class="pill">
+          <div class="pill-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           21 ans
         </div>
-        <div class="pill-item">
-          <span class="pill-icon">📅</span>
+        <div class="pill">
+          <div class="pill-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
           Année 2
         </div>
       </div>
@@ -682,10 +599,10 @@
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+      <a href="#" class="footer-icon" title="Email">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
       </a>
-      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+      <a href="#" class="footer-icon" title="LinkedIn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
       </a>
     </div>
@@ -695,43 +612,6 @@
     /* ── Navbar scroll ── */
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
-
-    /* ── Dropdown persistence ── */
-    const navMenuItems = document.querySelectorAll('.nav-links > li');
-    navMenuItems.forEach(item => {
-      let closeTimer = null;
-      const button = item.querySelector('button');
-      const openItem = () => {
-        clearTimeout(closeTimer);
-        navMenuItems.forEach(other => other.classList.remove('open'));
-        item.classList.add('open');
-      };
-      const closeItem = () => {
-        clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
-      };
-
-      item.addEventListener('mouseenter', openItem);
-      item.addEventListener('mouseleave', closeItem);
-
-      if (button) {
-        button.addEventListener('click', event => {
-          event.preventDefault();
-          const isOpen = item.classList.contains('open');
-          if (isOpen) {
-            item.classList.remove('open');
-          } else {
-            openItem();
-          }
-        });
-      }
-    });
-
-    document.addEventListener('click', event => {
-      if (!event.target.closest('.nav-links > li')) {
-        navMenuItems.forEach(item => item.classList.remove('open'));
-      }
-    });
 
     /* ── Scroll-reveal ── */
     const obs = new IntersectionObserver(entries => {
@@ -840,6 +720,21 @@
     document.querySelectorAll('.tl-item').forEach((el, i) => {
       el.style.animationDelay = `${i * 0.12}s`;
     });
+  
+    /* ── Dropdown click toggle ── */
+    document.querySelectorAll('.nav-links > li > button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const li = btn.parentElement;
+        const isOpen = li.classList.contains('open');
+        document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+        if (!isOpen) li.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+    });
+
   </script>
 </body>
 </html>

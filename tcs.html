@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Tableau de synthèse des réalisations professionnelles — BTS SIO SISR Session 2026." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyrus DEHGHAN — TCS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,6 +24,7 @@
     }
 
     html { scroll-behavior: smooth; }
+    ::selection { background: rgba(45,45,255,0.4); color: #fff; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
@@ -34,50 +36,27 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { /* hover disabled */ }
     .nav-links > li { position: relative; }
-    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-links > li:hover .nav-drop,
-    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
-    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
     .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
 
     /* ── HERO ── */
-    .page-hero { position: relative; overflow: hidden; min-height: 420px; display: flex; align-items: flex-start; justify-content: center; padding: 8rem 2rem 2rem; }
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
     #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-
-    .hero-card {
-      position: relative; z-index: 10;
-      width: min(100%, 860px);
-      margin: 0 auto;
-      transform: none;
-      background: transparent;
-      backdrop-filter: none;
-      border: none;
-      border-radius: 0;
-      padding: 0;
-      text-align: center;
-      box-shadow: none;
-    }
-    .hero-badges {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 0.65rem 1rem; border-radius: 999px;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text); font-size: 0.95rem; font-weight: 500;
-    }
-    .hero-eyebrow { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.9rem; }
-    .hero-card h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.3rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.05; margin-bottom: 1.3rem; letter-spacing: -0.03em; }
-    .hero-card h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero-card p { font-size: 1rem; color: var(--muted); line-height: 2; max-width: 760px; margin: 0 auto; }
+    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(6,6,15,0.62); }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.975rem; color: var(--muted); line-height: 1.8; max-width: 540px; }
 
     /* ── MAIN CONTENT ── */
-    .page-content { padding-top: 55px; max-width: 1000px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 5rem; }
+    .page-content { padding-top: 2rem; max-width: 1000px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 5rem; }
 
     /* ── PDF SECTION ── */
     .pdf-section { opacity: 0; }
@@ -112,7 +91,6 @@
       background: rgba(45,45,255,0.08);
       border-bottom: 1px solid var(--border);
     }
-    .pdf-card .pdf-card-bar { display: none; }
     .pdf-card-bar-left { display: flex; align-items: center; gap: 0.75rem; }
     .pdf-icon {
       width: 36px; height: 36px;
@@ -144,9 +122,6 @@
       position: relative;
       overflow: hidden;
     }
-
-    .pdf-iframe { width: 100%; height: 100%; border: none; }
-    .pdf-img { width: 100%; height: 100%; object-fit: contain; object-position: center; display: block; background: #0a0a1a; }
 
     /* Placeholder lines mimicking a document */
     .pdf-placeholder {
@@ -185,8 +160,6 @@
       backdrop-filter: blur(2px);
       opacity: 0;
       transition: opacity 0.25s;
-      z-index: 6;
-      pointer-events: none;
     }
     .pdf-card:hover .pdf-overlay-hint { opacity: 1; }
     .pdf-overlay-hint .hint-icon {
@@ -196,7 +169,6 @@
       display: flex; align-items: center; justify-content: center;
       color: #a5b4fc;
     }
-    .pdf-overlay-link { position: absolute; inset: 0; z-index: 8; background: transparent; cursor: pointer; }
     .pdf-overlay-hint p { font-size: 0.92rem; color: var(--text); font-weight: 500; }
     .pdf-overlay-hint span { font-size: 0.78rem; color: var(--muted); }
 
@@ -218,11 +190,23 @@
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
-      .page-content { padding-top: 160px; padding-left: 1.5rem; padding-right: 1.5rem; }
+      .page-content { padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem; }
       .pdf-preview { height: 420px; }
       .pdf-placeholder { width: 90%; }
       footer { padding: 2rem 1.5rem; }
     }
+  
+    /* ── DROPDOWN CLICK ── */
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+
+  
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-glow); outline-offset: 3px; border-radius: 4px; }
+  
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,45,255,0.4); }
   </style>
 </head>
 <body>
@@ -256,20 +240,17 @@
         </ul>
       </li>
     </ul>
-    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+    <button class="nav-cta">Me contacter</button>
   </nav>
 
   <!-- HERO -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-card">
-      <p class="hero-eyebrow">BTS SIO SISR · Session 2026</p>
+    <div class="hero-fade"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">BTS SIO SISR · Session 2026</span>
       <h1>Ma page <span class="grad">TCS</span></h1>
       <p>Tableau de synthèse des réalisations professionnelles — récapitulatif des compétences mises en œuvre durant ma formation et mon alternance.</p>
-      <div class="hero-badges">
-        <span class="hero-badge">Tableau de compétences</span>
-        <span class="hero-badge">Synthèse métier</span>
-      </div>
     </div>
   </section>
 
@@ -282,10 +263,10 @@
       <p class="section-sub">Cliquez sur le document pour l'ouvrir dans un nouvel onglet.</p>
 
       <!-- Remplace "TCS.pdf" par le chemin de ton fichier PDF -->
-      <div class="pdf-card">
+      <a class="pdf-card" href="Dossiers/TCS.pdf" target="_blank" rel="noopener noreferrer">
 
         <!-- Top bar -->
-          <div class="pdf-card-bar">
+        <div class="pdf-card-bar">
           <div class="pdf-card-bar-left">
             <div class="pdf-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -295,18 +276,15 @@
               <div class="pdf-type">Tableau de synthèse · PDF · Session 2026</div>
             </div>
           </div>
-          <a class="pdf-open-btn" href="Dossiers/TCS.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="pdf-open-btn">
             Ouvrir
             <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          </a>
+          </div>
         </div>
 
         <!-- Preview mockup -->
         <div class="pdf-preview">
-          <img src="Dossiers/TCS.jpg" alt="TCS - DEHGHAN Cyrus" class="pdf-img" />
-
-          <!-- transparent overlay link to open PDF in new tab -->
-          <a class="pdf-overlay-link" href="Dossiers/TCS.pdf" target="_blank" rel="noopener noreferrer" aria-label="Ouvrir le document TCS en nouvel onglet"></a>
+          <img src="Dossiers/TCS.jpg" alt="Tableau de synthèse TCS" style="width:90%;max-width:800px;height:auto;max-height:640px;object-fit:contain;border-radius:6px;box-shadow:0 8px 40px rgba(0,0,0,0.5);" />
 
           <!-- Hover overlay -->
           <div class="pdf-overlay-hint">
@@ -318,7 +296,7 @@
           </div>
         </div>
 
-      </div>
+      </a>
     </section>
 
   </div>
@@ -334,10 +312,10 @@
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+      <a href="#" class="footer-icon" title="Email">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
       </a>
-      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+      <a href="#" class="footer-icon" title="LinkedIn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
       </a>
     </div>
@@ -346,40 +324,6 @@
   <script>
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
-
-    const navMenuItems = document.querySelectorAll('.nav-links > li');
-    navMenuItems.forEach(item => {
-      let closeTimer = null;
-      const button = item.querySelector('button');
-      const openItem = () => {
-        clearTimeout(closeTimer);
-        navMenuItems.forEach(other => other.classList.remove('open'));
-        item.classList.add('open');
-      };
-      const closeItem = () => {
-        clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
-      };
-      item.addEventListener('mouseenter', openItem);
-      item.addEventListener('mouseleave', closeItem);
-      if (button) {
-        button.addEventListener('click', event => {
-          event.preventDefault();
-          const isOpen = item.classList.contains('open');
-          if (isOpen) {
-            item.classList.remove('open');
-          } else {
-            openItem();
-          }
-        });
-      }
-    });
-
-    document.addEventListener('click', event => {
-      if (!event.target.closest('.nav-links > li')) {
-        navMenuItems.forEach(item => item.classList.remove('open'));
-      }
-    });
 
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
@@ -427,6 +371,21 @@
     const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  
+    /* ── Dropdown click toggle ── */
+    document.querySelectorAll('.nav-links > li > button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const li = btn.parentElement;
+        const isOpen = li.classList.contains('open');
+        document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+        if (!isOpen) li.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+    });
+
   </script>
 </body>
 </html>

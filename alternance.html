@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Mon alternance chez Econocom France en mission chez Skeepers — missions, logiciels et outils utilisés." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyrus DEHGHAN — Mon Alternance</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,20 +12,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #0a0714;
-      --surface:    #110d22;
-      --accent:     #2d2dff;
-      --accent-glow:#4f4fff;
-      --blue:       var(--accent);
-      --blue-glow:  var(--accent-glow);
-      --purple:     var(--accent);
-      --pink:       var(--accent);
-      --text:       #e8dfff;
-      --muted:      #7d7d9a;
-      --border:     rgba(255,255,255,0.07);
+      --bg:        #06060f;
+      --surface:   #0d0d1e;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
     }
 
     html { scroll-behavior: smooth; }
+    ::selection { background: rgba(45,45,255,0.4); color: #fff; }
     body {
       background: var(--bg); color: var(--text);
       font-family: 'DM Sans', sans-serif; font-size: 16px;
@@ -56,98 +56,46 @@
     }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { /* hover disabled */ }
     .nav-links > li { position: relative; }
     .nav-drop {
-      position: absolute; top: 100%; left: 0; min-width: 180px;
+      position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px;
       background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09);
       border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none;
       opacity: 0; pointer-events: none; transform: translateY(7px);
       transition: opacity 0.2s, transform 0.2s; z-index: 400;
     }
-    .nav-links > li:hover .nav-drop,
-    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
-    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
     .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
 
     /* ── HERO BANNER ── */
-    .page-hero {
-      position: relative; overflow: hidden;
-      min-height: 460px; display: flex; align-items: flex-start; justify-content: center;
-      padding: 6rem 2rem 2rem;
-    }
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
     #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(6,6,15,0.62); }
 
-    /* Hero card */
-    .hero-card {
-      position: relative; z-index: 10;
-      width: min(100%, 860px);
-      margin: 0 auto;
-      transform: none;
-      background: transparent;
-      backdrop-filter: none;
-      border: none;
-      border-radius: 0;
-      padding: 0;
-      text-align: center;
-      box-shadow: none;
+    .hero-content {
+      position: relative; z-index: 10; text-align: center; max-width: 720px;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
     }
-    .hero-icon-box {
-      width: 68px; height: 68px;
-      margin: 0 auto 1rem;
-      display: grid; place-items: center;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(45,45,255,0.24), rgba(45,45,255,0.16));
-      box-shadow: 0 18px 40px rgba(45,45,255,0.16);
-    }
-    .hero-badges {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.5rem;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 0.65rem 1rem; border-radius: 999px;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text); font-size: 0.9rem; font-weight: 500;
-    }
-    .hero-card > * { width: 100%; }
-    .hero-card p, .hero-meta, .hero-btns { max-width: 720px; margin: 0 auto; }
-    .hero-btns { display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; width: 100%; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.975rem; color: var(--muted); line-height: 1.8; max-width: 540px; }
 
-    .hero-eyebrow {
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--blue); margin-bottom: 0.85rem;
-    }
-    .hero-card h1 {
-      font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.1rem);
-      font-weight: 800; margin-bottom: 1.4rem; letter-spacing: -0.03em;
-      line-height: 1.05;
-    }
-    .hero-desc {
-      font-size: 1rem; color: var(--muted); line-height: 2;
-      margin-bottom: 4.4rem;
-    }
-
-    .hero-meta {
-      display: grid; grid-template-columns: repeat(2, minmax(140px, 1fr));
-      gap: 0.05rem; justify-items: center;
-      margin: 0 auto 1.75rem; padding-top: 0.75rem;
-      max-width: 340px;
-    }
+    .hero-meta { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
     .meta-item { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; color: var(--muted); font-size: 0.8rem; }
-    .meta-icon {
-      width: 38px; height: 38px;
-      background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2);
-      border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc;
-    }
+    .meta-icon { width: 38px; height: 38px; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .meta-value { font-size: 0.85rem; color: var(--text); font-weight: 500; }
+    .hero-btns { display: flex; gap: 0.9rem; flex-wrap: wrap; justify-content: center; }
     .meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
     .meta-value { font-size: 0.85rem; color: var(--text); font-weight: 500; }
 
-    .hero-btns {
-      display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap; width: 100%;
-    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn-pdf {
       display: inline-flex; align-items: center; gap: 0.5rem;
       padding: 0.7rem 1.6rem; border-radius: 8px;
@@ -161,7 +109,7 @@
 
     /* ── MAIN CONTENT ── */
     .page-content {
-      padding-top: 90px;
+      padding-top: 2rem;
       max-width: 1000px; margin: 0 auto;
       padding-left: 2rem; padding-right: 2rem; padding-bottom: 6rem;
     }
@@ -209,16 +157,13 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.4rem;
     }
 
-    .mission-card {
+    .mission-card { text-decoration: none; color: inherit; cursor: pointer;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 1.75rem;
+      border-radius: 16px; padding: 1.75rem;
       display: flex; flex-direction: column; align-items: center;
       text-align: center; gap: 0.85rem;
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
       opacity: 0;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
     }
     .full-section.in-view .mission-card:nth-child(1) { animation: fadeUp 0.45s ease forwards 0.25s; }
     .full-section.in-view .mission-card:nth-child(2) { animation: fadeUp 0.45s ease forwards 0.35s; }
@@ -227,7 +172,7 @@
     .full-section.in-view .mission-card:nth-child(5) { animation: fadeUp 0.45s ease forwards 0.65s; }
     .full-section.in-view .mission-card:nth-child(6) { animation: fadeUp 0.45s ease forwards 0.75s; }
 
-    .mission-card:hover, .tool-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.28); box-shadow: 0 18px 55px rgba(0,0,0,0.45); }
+    .mission-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.28); box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
 
     .mission-icon-wrap {
       width: 76px; height: 76px; border-radius: 50%;
@@ -246,16 +191,13 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.4rem;
     }
 
-    .tool-card {
+    .tool-card { text-decoration: none; color: inherit; cursor: pointer;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 1.75rem;
+      border-radius: 16px; padding: 1.75rem;
       display: flex; flex-direction: column; align-items: center;
       text-align: center; gap: 0.75rem;
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
       opacity: 0;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
     }
     .full-section.in-view .tool-card:nth-child(1) { animation: fadeUp 0.45s ease forwards 0.25s; }
     .full-section.in-view .tool-card:nth-child(2) { animation: fadeUp 0.45s ease forwards 0.35s; }
@@ -316,10 +258,21 @@
       .nav-links { display: none; }
       .company-section { grid-template-columns: 1fr; }
       .company-logo-box { width: 100%; height: 120px; }
-      .hero-meta, .hero-btns { grid-template-columns: 1fr; }
-      .page-content { padding-top: 160px; padding-left: 1.5rem; padding-right: 1.5rem; }
+      .page-content { padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem; }
       footer { padding: 2rem 1.5rem; }
     }
+  
+    /* ── DROPDOWN CLICK ── */
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+
+  
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-glow); outline-offset: 3px; border-radius: 4px; }
+  
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,45,255,0.4); }
   </style>
 </head>
 <body>
@@ -353,41 +306,32 @@
         </ul>
       </li>
     </ul>
-    <a href="mailto:cyrusdehghan60@gmail.com" class="nav-cta">Me contacter</a>
+    <button class="nav-cta">Me contacter</button>
   </nav>
 
   <!-- HERO -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-card" id="hero-card">
-      <p class="hero-eyebrow">À propos · Alternance</p>
-      <h1>Mon Alternance</h1>
-      <p class="hero-desc">Actuellement Alternant Technicien Support Utilisateur chez <strong style="color:var(--text)">Econocom France</strong>, en mission chez <strong style="color:var(--text)">Skeepers</strong>. Cette expérience me permet de découvrir le monde professionnel et d'approfondir les compétences acquises dans le cadre de mon <strong style="color:var(--text)">BTS SIO option SISR</strong>.</p>
+    <div class="hero-fade"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">À propos · Alternance</span>
+      <h1>Mon <span class="grad">Alternance</span></h1>
+      <p>Actuellement Alternant Technicien Support Utilisateur chez <strong style="color:var(--text)">Econocom France</strong>, en mission chez <strong style="color:var(--text)">Skeepers</strong>. Cette expérience approfondit mes compétences dans le cadre du <strong style="color:var(--text)">BTS SIO SISR</strong>.</p>
       <div class="hero-meta">
         <div class="meta-item">
-          <div class="meta-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
+          <div class="meta-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
           <span class="meta-label">Période</span>
           <span class="meta-value">Sept. 2024 — Août 2026</span>
         </div>
         <div class="meta-item">
-          <div class="meta-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </div>
+          <div class="meta-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
           <span class="meta-label">Lieu</span>
           <span class="meta-value">Marseille</span>
         </div>
       </div>
       <div class="hero-btns">
-        <a href="#missions" class="btn-pdf primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Mes missions
-        </a>
-        <a href="#logiciels" class="btn-pdf secondary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          Logiciels et Outils
-        </a>
+        <a href="#missions" class="btn-pdf primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Mes missions</a>
+        <a href="#logiciels" class="btn-pdf secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Mes logiciels</a>
       </div>
     </div>
   </section>
@@ -455,13 +399,13 @@
 
       <div class="missions-grid">
 
-        <a class="mission-card" href="Dossiers/Organisation%20du%20Local%20Technique.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Organisation du Local Technique.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">🗄️</div>
           <div class="mission-title">Organisation du Local Technique</div>
           <div class="mission-desc">Organisation, gestion et suivi sécurisé du matériel dans le local technique — inventaire, étiquetage et rangement des équipements.</div>
         </a>
 
-        <a class="mission-card" href="Dossiers/Ticketing%20Jira.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Ticketing Jira.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">
             <svg width="28" height="28" viewBox="0 0 60 60"><circle cx="30" cy="30" r="30" fill="#0052cc"/><text x="50%" y="56%" text-anchor="middle" fill="white" font-size="18" font-family="Arial" font-weight="bold">J</text></svg>
           </div>
@@ -469,25 +413,25 @@
           <div class="mission-desc">Suivi et gestion des demandes d'assistance utilisateurs via Jira — priorisation, résolution et documentation des incidents.</div>
         </a>
 
-        <a class="mission-card" href="Dossiers/Revue%20Hebdomadaire.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Revue Hebdomadaire.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">🔒</div>
           <div class="mission-title">Revue Hebdomadaire</div>
           <div class="mission-desc">Contrôle hebdomadaire rigoureux des étapes assurant la conformité, la sécurité et le stockage via les solutions Microsoft.</div>
         </a>
 
-        <a class="mission-card" href="Dossiers/Installation%20d%27un%20Switch%208%20ports.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Installation d'un Switch 8 ports.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">🔌</div>
           <div class="mission-title">Installation d'un Switch 8 ports</div>
           <div class="mission-desc">Installation permettant d'offrir le réseau à un plus grand nombre d'utilisateurs — câblage, configuration et test de connectivité.</div>
         </a>
 
-        <a class="mission-card" href="Dossiers/R%C3%A9organisation%20de%20deux%20baies%20et%20brassage%20vers%20PoE.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Réorganisation de deux baies et brassage vers PoE.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">🖧</div>
           <div class="mission-title">Réorganisation de deux baies vers PoE</div>
           <div class="mission-desc">Ajout d'un switch PoE et réorganisation de deux baies de réseau afin d'améliorer la qualité et la lisibilité du câblage.</div>
         </a>
 
-        <a class="mission-card" href="Dossiers/Remplacement%20d%27un%20switch%20et%20brassage.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="mission-card" href="Dossiers/Remplacement d'un switch et brassage.pdf" target="_blank" rel="noopener noreferrer">
           <div class="mission-icon-wrap">🔧</div>
           <div class="mission-title">Remplacement d'un switch et brassage</div>
           <div class="mission-desc">Remplacement de câbles d'un switch 24P afin de dégager de l'espace dans la baie et optimiser la gestion des flux réseau.</div>
@@ -520,13 +464,13 @@
           <div class="tool-desc">Suite d'outils collaboratifs pour la gestion de projets, le suivi des tâches et la centralisation de la documentation d'équipe.</div>
         </a>
 
-        <a class="tool-card" href="Dossiers/Services%20Microsoft%20Azure.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="tool-card" href="Dossiers/Services Microsoft Azure.pdf" target="_blank" rel="noopener noreferrer">
           <div class="tool-logo azure">Azure</div>
           <div class="tool-name">Microsoft Azure</div>
           <div class="tool-desc">Service cloud de Microsoft permettant de gérer, sécuriser et administrer l'écosystème de l'entreprise.</div>
         </a>
 
-        <a class="tool-card" href="Dossiers/Omada%20Cloud%20Management.pdf" target="_blank" rel="noopener noreferrer">
+        <a class="tool-card" href="Dossiers/Omada Cloud Management.pdf" target="_blank" rel="noopener noreferrer">
           <div class="tool-logo omada">Omada</div>
           <div class="tool-name">Omada (TP-Link)</div>
           <div class="tool-desc">Solution de gestion centralisée des équipements réseau pour configurer, surveiller et sécuriser l'ensemble du réseau.</div>
@@ -560,10 +504,10 @@
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+      <a href="#" class="footer-icon" title="Email">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
       </a>
-      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+      <a href="#" class="footer-icon" title="LinkedIn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
       </a>
     </div>
@@ -573,40 +517,6 @@
     /* ── Navbar ── */
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
-
-    const navMenuItems = document.querySelectorAll('.nav-links > li');
-    navMenuItems.forEach(item => {
-      let closeTimer = null;
-      const button = item.querySelector('button');
-      const openItem = () => {
-        clearTimeout(closeTimer);
-        navMenuItems.forEach(other => other.classList.remove('open'));
-        item.classList.add('open');
-      };
-      const closeItem = () => {
-        clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
-      };
-      item.addEventListener('mouseenter', openItem);
-      item.addEventListener('mouseleave', closeItem);
-      if (button) {
-        button.addEventListener('click', event => {
-          event.preventDefault();
-          const isOpen = item.classList.contains('open');
-          if (isOpen) {
-            item.classList.remove('open');
-          } else {
-            openItem();
-          }
-        });
-      }
-    });
-
-    document.addEventListener('click', event => {
-      if (!event.target.closest('.nav-links > li')) {
-        navMenuItems.forEach(item => item.classList.remove('open'));
-      }
-    });
 
     /* ── Scroll-reveal ── */
     const obs = new IntersectionObserver(entries => {
@@ -636,7 +546,7 @@
       let t=0;
       function tick() {
         t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
-        ctx.fillStyle='#0a0714'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle='#06060f'; ctx.fillRect(0,0,W,H);
         blobs.forEach((b,i)=>{
           const rgb=rgbs[i%rgbs.length];
           const breathe=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
@@ -665,9 +575,24 @@
       tick();
     }
 
-    const palette = ['#2d2dff','#3b56ff','#4f4fff','#5e71ff','#7386ff','#8ca0ff'];
+    const palette = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:palette });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:palette });
+  
+    /* ── Dropdown click toggle ── */
+    document.querySelectorAll('.nav-links > li > button').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const li = btn.parentElement;
+        const isOpen = li.classList.contains('open');
+        document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+        if (!isOpen) li.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
+    });
+
   </script>
 </body>
 </html>

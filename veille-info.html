@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Veille technologique sur le Cloud Computing — actualités en temps réel et analyse." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyrus DEHGHAN — Veille Informatique</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -15,6 +16,7 @@
       --border: rgba(255,255,255,0.07);
     }
     html { scroll-behavior: smooth; }
+    ::selection { background: rgba(45,45,255,0.4); color: #fff; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
@@ -26,9 +28,10 @@
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
-    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li:hover .chev { /* hover disabled */ }
     .nav-links > li { position: relative; }
     .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(10,10,24,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop { /* hover disabled, using click */ }
     .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
     .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
@@ -120,7 +123,7 @@
 
     .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
     .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
 
     .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
@@ -155,6 +158,23 @@
     .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
     .nav-links > li.open .chev { transform: rotate(180deg); }
 
+  
+    .rss-refresh {
+      width: 32px; height: 32px;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s, transform 0.4s;
+    }
+    .rss-refresh:hover { background: rgba(45,45,255,0.15); color: var(--text); }
+    .rss-refresh:active svg { transform: rotate(180deg); transition: transform 0.4s; }
+  
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--blue-glow); outline-offset: 3px; border-radius: 4px; }
+  
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(45,45,255,0.4); }
   </style>
 </head>
 <body>
@@ -291,7 +311,12 @@
           <p class="section-label" style="text-align:left;">Automatique · Temps réel</p>
           <h2 class="section-heading" style="text-align:left;">Dernières actualités</h2>
         </div>
-        <span class="rss-badge">En direct</span>
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+          <span class="rss-badge">En direct</span>
+          <button class="rss-refresh" onclick="loadRSS()" title="Actualiser">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          </button>
+        </div>
       </div>
       <div class="rss-grid" id="rss-container">
         <div class="rss-loading">Chargement des actualités...</div>
@@ -349,7 +374,8 @@
     /* RSS FEED — Cloud Computing, multi-proxy fallback */
     async function loadRSS() {
       const container = document.getElementById('rss-container');
-      const query = 'cloud+computing+informatique';
+      container.innerHTML = '<div class="rss-loading">Chargement des actualités...</div>';
+      const query = 'cloud+computing+OR+%22cloud+souverain%22+OR+datacenter';
       const googleRSS = `https://news.google.com/rss/search?q=${query}&hl=fr&gl=FR&ceid=FR:fr`;
 
       // Plusieurs proxies CORS en fallback

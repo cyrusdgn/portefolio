@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Projets de formation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #13102a;
+      --surface:   #1c1838;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(30,26,60,0.55); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active, .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(30,26,58,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; white-space: nowrap; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 580px; }
+
+    /* ── CONTENT ── */
+    .page-content { padding-top: 1rem; max-width: 1100px; margin: 0 auto; padding-left: 2rem; padding-right: 2rem; padding-bottom: 5rem; }
+
+    .sec-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.4rem; }
+    .sec-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.15; }
+
+    /* ── LÉGENDE + FILTRES ── */
+    .toolbar {
+      position: sticky; top: 62px; z-index: 50;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.9rem 1.1rem; margin-bottom: 3rem;
+      background: rgba(30,26,60,0.62); backdrop-filter: blur(18px);
+      border: 1px solid var(--border); border-radius: 14px;
+    }
+    .filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
+    .filter-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 0.25rem; }
+    .chip {
+      font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--muted);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      padding: 0.36rem 0.85rem; border-radius: 100px; cursor: pointer; text-decoration: none;
+      transition: color 0.18s, background 0.18s, border-color 0.18s;
+    }
+    .chip:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .chip.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+    .chip .count { opacity: 0.7; margin-left: 0.25rem; font-size: 0.72rem; }
+
+
+    /* ── BADGES DE NIVEAU ── */
+    .lvl {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.26rem 0.65rem; border-radius: 100px; white-space: nowrap;
+    }
+    .lvl::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .lvl-bts  { background: rgba(45,45,255,0.85); color: #fff; }
+    .lvl-bach { background: rgba(192,132,252,0.92); color: #1a0b2e; }
+    /* Filtre TP */
+    .filter-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.12); margin: 0 0.25rem; }
+    .chip-tp { color: #5eead4; border-color: rgba(45,212,191,0.3); }
+    .chip-tp:hover { color: #99f6e4; border-color: rgba(45,212,191,0.55); }
+    .chip-tp.active { color: #032420; background: #2dd4bf; border-color: #2dd4bf; }
+    .domain.is-hidden { display: none; }
+
+    /* Section TP : séparée visuellement des domaines de procédures */
+    .domain-tp { padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .domain-tp .domain-icon { background: rgba(45,212,191,0.12); border-color: rgba(45,212,191,0.3); color: #5eead4; }
+    .domain-tp .sec-label { color: #2dd4bf; }
+
+    .perso-link { text-align: center; font-size: 0.86rem; color: var(--muted); margin-top: -1.5rem; }
+    .perso-link a { color: #a5b4fc; text-decoration: none; font-weight: 500; }
+    .perso-link a:hover { text-decoration: underline; }
+    .domain-empty a { color: #a5b4fc; }
+    .proc-img .lvl { position: absolute; top: 10px; left: 10px; z-index: 3; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+
+    /* ── DOMAINES ── */
+    .domain { margin-bottom: 4.5rem; scroll-margin-top: 150px; opacity: 0; }
+    .domain.in-view { animation: fadeUp 0.6s ease forwards; }
+    .domain-head { display: flex; gap: 1.1rem; align-items: flex-start; margin-bottom: 1.6rem; }
+    .domain-icon {
+      width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px;
+      background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.25);
+      display: flex; align-items: center; justify-content: center; color: #a5b4fc;
+    }
+    .domain-prog {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem;
+      margin-top: 0.6rem; font-size: 0.84rem; color: var(--muted); line-height: 1.55;
+    }
+    .domain-prog .arrow { color: var(--purple); }
+    .domain-empty { display: none; font-size: 0.85rem; color: var(--muted); padding: 1rem 0; }
+
+    /* ── CARTES ── */
+    .proc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+
+    .proc-card {
+      display: flex; flex-direction: column; text-decoration: none; color: inherit;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .proc-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.32); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+    .proc-card.is-hidden { display: none; }
+
+    .proc-img { width: 100%; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; background: #0a0a1f; flex-shrink: 0; }
+    .proc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .proc-card:hover .proc-img img { transform: scale(1.05); }
+
+    .proc-img-overlay {
+      position: absolute; inset: 0; background: rgba(45,45,255,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.25s;
+      color: #fff; font-size: 0.8rem; font-weight: 500; gap: 0.4rem;
+    }
+    .proc-card:hover .proc-img-overlay { opacity: 1; }
+
+    .proc-info { padding: 0.95rem 1.1rem 1.15rem; display: flex; flex-direction: column; gap: 0.35rem; flex: 1; }
+    .ctx { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a5b4fc; }
+    .proc-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; }
+    .proc-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
+    .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 1000px) {
+      .proc-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .proc-grid { grid-template-columns: repeat(2, 1fr); }
+      .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .toolbar { position: static; }
+      footer { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 560px) {
+      .proc-grid { grid-template-columns: 1fr; }
+    }
+      /* nav-v2 : états actifs des menus déroulants */
+    .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-drop li a { white-space: nowrap; }
+    .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { text-decoration: none; }</style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>Parcours <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="formations.html">Formations</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li>
+        <button class="active">Réalisations <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="projets.html" class="active-sub">Projets de formation</a></li>
+          <li><a href="projets-perso.html">Projets personnels</a></li>
+        </ul>
+      </li>
+      <li><a href="competences.html">Compétences</a></li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille cybersécurité / informatique</a></li>
+          <li><a href="veille-juridique.html">Veille juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Contact</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Réalisations · Du BTS au Bachelor</span>
+      <h1>Projets de <span class="grad">formation</span></h1>
+      <p>Projets scolaires et missions en alternance réunis et classés par domaine de compétence. Chaque réalisation porte un badge de niveau : de l'exécution technique (BTS) vers la conception, le pilotage et la sécurisation d'infrastructures (Bachelor).</p>
+    </div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="page-content">
+
+    <!-- Filtres -->
+    <div class="toolbar">
+      <div class="filter-group" id="level-filters">
+        <span class="filter-label">Niveau</span>
+        <button class="chip active" data-filter="all">Tous<span class="count"></span></button>
+        <button class="chip" data-filter="bts">BTS<span class="count"></span></button>
+        <button class="chip" data-filter="bachelor">Bachelor<span class="count"></span></button>
+        <span class="filter-sep"></span>
+        <button class="chip chip-tp" data-filter="tp">TP<span class="count"></span></button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Domaine</span>
+        <a class="chip" href="#reseaux">Réseaux</a>
+        <a class="chip" href="#systemes">Systèmes</a>
+        <a class="chip" href="#securite">Cybersécurité</a>
+        <a class="chip" href="#supervision">Supervision &amp; support</a>
+        <a class="chip" href="#tp">TP</a>
+      </div>
+    </div>
+
+    <!-- ═══════════════ DOMAINE 1 : RÉSEAUX ═══════════════ -->
+    <section class="domain" id="reseaux">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="3" width="7" height="7" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/><path d="M5.5 10v4h13v-4M12 14v-4"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Domaine 01</p>
+          <h2 class="sec-heading">Réseaux &amp; infrastructure</h2>
+          <p class="domain-prog">Équipements et architecture du réseau : commutation, routage, VLAN, Wi-Fi et câblage.</p>
+        </div>
+      </div>
+
+      <div class="proc-grid">
+
+        <a class="proc-card" data-level="bts" href="formations.html#fc-castellane">
+          <div class="proc-img" style="background:#fff;">
+            <img src="Dossiers/schema-reseau.jfif" alt="Schéma de l'infrastructure FC Castellane" style="object-fit:contain;" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Voir le projet
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet fil rouge · BTS</span>
+            <div class="proc-title">Infrastructure FC Castellane</div>
+            <div class="proc-desc">Infrastructure complète (Proxmox, VLAN, DMZ) sur laquelle ont été réalisées la plupart de mes procédures BTS.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Sch%C3%A9ma%20d%27Infrastructure%20R%C3%A9seau%20Salle.jpg" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Dossiers/Sch%C3%A9ma%20d%27Infrastructure%20R%C3%A9seau%20Salle.jpg" alt="Schéma physique du réseau de la salle" style="object-position:62% center;" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le schéma
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Schéma physique de la salle</div>
+            <div class="proc-desc">Raccordement du plot S3P1 au réseau de l'école : routeur Zyxel, switchs, serveur Proxmox (NIC dédiées WAN, DMZ, Proxmox) et NAS.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20Switch%20Router%20VLAN.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/switch%20router%20vlan.jpg" alt="Switch, routeur et VLAN" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Configuration de deux VLAN sur un switch et un routeur</div>
+            <div class="proc-desc">Switch NETGEAR GS308E et routeur Zyxel USG FLEX 50 : deux VLAN isolés, port trunk et règles de sécurité.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20UniFi.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/unifi%20proc%C3%A9dure.jpg" alt="UniFi" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Déploiement d'un réseau Wi-Fi UniFi</div>
+            <div class="proc-desc">Point d'accès U6+, contrôleur UniFi et portail captif avec codes d'accès sur le VLAN 20 visiteurs.</div>
+          </div>
+        </a>
+
+      </div>
+      <p class="domain-empty">Aucune réalisation pour ce niveau dans ce domaine.</p>
+    </section>
+
+    <!-- ═══════════════ DOMAINE 2 : SYSTÈMES ═══════════════ -->
+    <section class="domain" id="systemes">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Domaine 02</p>
+          <h2 class="sec-heading">Systèmes &amp; services</h2>
+          <p class="domain-prog">Serveurs et services de l'infrastructure : annuaire, messagerie, déploiement, téléphonie et virtualisation.</p>
+        </div>
+      </div>
+
+      <div class="proc-grid">
+
+        <a class="proc-card" data-level="bts" href="proc-ad.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/proc%C3%A9dure%20active%20directory.jpg" alt="Active Directory" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation d'un Active Directory</div>
+            <div class="proc-desc">Mise en place d'un contrôleur de domaine sur un serveur Proxmox et de sa redondance.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20GPO.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/gpo%20proc%C3%A9dure.webp" alt="GPO" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Déploiement de lecteurs réseau par GPO</div>
+            <div class="proc-desc">Partage de dossiers avec droits d'accès et mappage automatique des lecteurs réseau sur les postes du domaine.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20Exchange.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/exchange%20proc%C3%A9dure.png" alt="Exchange" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation d'un serveur Exchange 2019</div>
+            <div class="proc-desc">Intégration à l'Active Directory, création des boîtes aux lettres et test d'envoi via OWA.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20FOG.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/fog%20proc%C3%A9dure.png" alt="FOG" style="object-position:center top;" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation d'un serveur FOG Project</div>
+            <div class="proc-desc">Déploiement et clonage de postes par le réseau (PXE) depuis une VM Debian sur Proxmox.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20XiVO.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/xivo%20proc%C3%A9dure.jpg" alt="XiVO" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Déploiement d'une solution de téléphonie IP XiVO</div>
+            <div class="proc-desc">IPBX sur VM Debian : utilisateurs, lignes et appels SIP entre deux softphones Zoiper.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bachelor" href="Dossiers/Procedure%20WikiJS.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/wikijs.jpg" alt="Wiki.js" style="object-fit:contain; background:#fff; padding:1.6rem 1.2rem 0.6rem; box-sizing:border-box;" />
+            <span class="lvl lvl-bach">Bachelor</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet Bachelor · IFC</span>
+            <div class="proc-title">Déploiement de Wiki.js sur Debian 12</div>
+            <div class="proc-desc">Wiki de documentation sous Docker (Wiki.js + PostgreSQL) avec authentification Active Directory (LDAP).</div>
+          </div>
+        </a>
+
+
+      </div>
+      <p class="domain-empty">Aucune réalisation pour ce niveau dans ce domaine.</p>
+    </section>
+
+    <!-- ═══════════════ DOMAINE 3 : CYBERSÉCURITÉ ═══════════════ -->
+    <section class="domain" id="securite">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Domaine 03</p>
+          <h2 class="sec-heading">Cybersécurité</h2>
+          <p class="domain-prog">Protection du système d'information : filtrage, accès distants sécurisés, exposition des services et veille sur les vulnérabilités.</p>
+        </div>
+      </div>
+
+      <div class="proc-grid">
+
+        <a class="proc-card" data-level="bachelor" href="Dossiers/Procedure%20Flux%20RSS%20IIS%20ASP.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/flux%20rss%20asp%20iss%20proc%C3%A9dure.webp" alt="Flux RSS de veille CVE" />
+            <span class="lvl lvl-bach">Bachelor</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet Bachelor · IFC</span>
+            <div class="proc-title">Mise en place d'un flux RSS de veille CVE</div>
+            <div class="proc-desc">Page de veille sous IIS/ASP qui agrège le catalogue CISA des failles exploitées : tableau de bord filtrable et flux RSS.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20DMZ.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/dmz%20proc%C3%A9dure.jpg" alt="DMZ Zevenet" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Mise en place d'une DMZ et haute disponibilité web</div>
+            <div class="proc-desc">Serveurs WEB1 et WEB2 sur Hyper-V derrière le répartiteur ZEVENET : bascule automatique en cas de panne.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20VPN%20IKEv2.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/vpn%20ike%20v2%20proc%C3%A9dure.jpg" alt="VPN IKE v2" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Configuration d'un VPN IKEv2 · Zyxel</div>
+            <div class="proc-desc">Accès distant sécurisé (client-to-site) avec un pare-feu Zyxel USG FLEX 50 et le client SecuExtender.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20Artica.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/artica.png" alt="Artica" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation du proxy Artica</div>
+            <div class="proc-desc">Filtrage web, déchiffrement HTTPS et déploiement du certificat et du proxy par GPO.</div>
+          </div>
+        </a>
+
+
+
+      </div>
+      <p class="domain-empty">Aucune réalisation pour ce niveau dans ce domaine.</p>
+    </section>
+
+    <!-- ═══════════════ DOMAINE 4 : SUPERVISION & SUPPORT ═══════════════ -->
+    <section class="domain" id="supervision">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 12l3-3 3 3 5-5"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Domaine 04</p>
+          <h2 class="sec-heading">Supervision, support &amp; gestion de parc</h2>
+          <p class="domain-prog">Surveillance de l'infrastructure, alertes et gestion du parc informatique.</p>
+        </div>
+      </div>
+
+      <div class="proc-grid">
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/zabbix%20proc%C3%A9dure.png" alt="Zabbix" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation d'un logiciel de supervision Zabbix</div>
+            <div class="proc-desc">Zabbix 7.4 sur Debian 13 (Proxmox) : tableaux de bord, performances et alertes de l'infrastructure.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20Trigger%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.35rem; background:#d40000; color:#fff;">
+              <span style="font-family:'Syne', sans-serif; font-size:1.15rem; font-weight:800; letter-spacing:0.06em; border:2px solid #fff; padding:0.15rem 0.6rem;">ZABBIX</span>
+              <span style="font-size:0.72rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase;">Trigger</span>
+            </div>
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Création d'un trigger Zabbix</div>
+            <div class="proc-desc">Déclencheur qui alerte quand le service Active Directory (NTDS) du contrôleur de domaine est arrêté depuis plus de 2 minutes.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bts" href="Dossiers/Procedure%20GLPI.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <img src="Images/glpi%20proc%C3%A9dure.png" alt="GLPI" />
+            <span class="lvl lvl-bts">BTS</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Projet scolaire</span>
+            <div class="proc-title">Installation de GLPI et annuaire LDAPS</div>
+            <div class="proc-desc">GLPI sous Ubuntu relié à l'Active Directory par une connexion LDAPS chiffrée par certificat.</div>
+          </div>
+        </a>
+
+
+
+
+      </div>
+      <p class="domain-empty">Aucune réalisation pour ce niveau dans ce domaine.</p>
+    </section>
+
+    <!-- ═══════════════ TRAVAUX PRATIQUES ═══════════════ -->
+    <section class="domain domain-tp" id="tp">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 9l3 3-3 3M12 15h5"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Travaux pratiques</p>
+          <h2 class="sec-heading">TP</h2>
+          <p class="domain-prog">Exercices pratiques réalisés en formation, en complément des procédures : manipulations, configurations et mises en situation.</p>
+        </div>
+      </div>
+
+      <!-- Ajouter ici les cartes de TP : copier une <a class="proc-card"> ci-dessus,
+           garder data-level="bts" ou "bachelor" (et le badge correspondant), et mettre <span class="ctx">TP · BTS</span> ou <span class="ctx">TP · Bachelor</span> -->
+      <div class="proc-grid">
+
+        <a class="proc-card" data-level="bachelor" href="Dossiers/TP1%20CyberPeak.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div style="width:100%; height:100%; box-sizing:border-box; padding:2.2rem 1rem 1rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2rem; text-align:center; background:linear-gradient(135deg,#0e7490,#1e3a8a); color:#fff;">
+              <span style="font-size:0.6rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; opacity:0.85;">TP 1</span>
+              <span style="font-family:'Syne', sans-serif; font-size:0.95rem; font-weight:800; letter-spacing:0.01em; max-width:100%; overflow-wrap:anywhere;">CyberPeak Solutions</span>
+              <span style="font-size:0.58rem; letter-spacing:0.06em; opacity:0.75;">GLPI · AD · Samba · Cisco · GPO</span>
+            </div>
+            <span class="lvl lvl-bach">Bachelor</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">TP · Bachelor</span>
+            <div class="proc-title">TP 1 · CyberPeak Solutions</div>
+            <div class="proc-desc">Infrastructure d'une entreprise : ticket GLPI, serveur de fichiers Samba, GPO de restriction, script de création des comptes AD, VLAN Cisco (VLSM, VTP) et sauvegarde chiffrée de l'AD.</div>
+          </div>
+        </a>
+
+        <a class="proc-card" data-level="bachelor" href="Dossiers/TP2%20GreenTechSprint.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div style="width:100%; height:100%; box-sizing:border-box; padding:2.2rem 1rem 1rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2rem; text-align:center; background:linear-gradient(135deg,#0f766e,#14532d); color:#fff;">
+              <span style="font-size:0.6rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; opacity:0.85;">TP 2</span>
+              <span style="font-family:'Syne', sans-serif; font-size:0.95rem; font-weight:800; letter-spacing:0.01em; max-width:100%; overflow-wrap:anywhere;">GreenTechSprint</span>
+              <span style="font-size:0.58rem; letter-spacing:0.06em; opacity:0.75;">AD · Wiki.js · VLAN · PowerShell</span>
+            </div>
+            <span class="lvl lvl-bach">Bachelor</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">TP · Bachelor</span>
+            <div class="proc-title">TP 2 · GreenTechSprint</div>
+            <div class="proc-desc">Infrastructure d'une entreprise : domaine AD, Wiki.js authentifié par l'AD, VLAN avec routage inter-VLAN, sauvegarde planifiée et création de comptes en PowerShell.</div>
+          </div>
+        </a>
+
+      </div>
+      <p class="domain-empty">Aucun TP pour l'instant : ils seront ajoutés ici prochainement.</p>
+    </section>
+
+    <p class="perso-link">Vous cherchez mes projets personnels ? Ils ont leur propre page : <a href="projets-perso.html">Projets personnels →</a></p>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">BTS → Bachelor</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          if (item.classList.contains('open')) item.classList.remove('open');
+          else openItem();
+        });
+      }
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) navMenuItems.forEach(item => item.classList.remove('open'));
+    });
+
+    /* ── Scroll-reveal ── */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.domain').forEach(el => obs.observe(el));
+
+    /* ── Filtre par niveau ── */
+    const cards = document.querySelectorAll('.proc-card[data-level]');
+    const chips = document.querySelectorAll('#level-filters .chip');
+    function updateEmptyStates() {
+      document.querySelectorAll('.domain').forEach(d => {
+        const visible = d.querySelectorAll('.proc-card[data-level]:not(.is-hidden)').length;
+        d.querySelector('.domain-empty').style.display = visible ? 'none' : 'block';
+      });
+    }
+    updateEmptyStates();
+    // Un TP est toute carte placée dans la section #tp
+    const isTp = card => !!card.closest('#tp');
+    const matches = (card, f) => f === 'all' || (f === 'tp' ? isTp(card) : card.dataset.level === f);
+    chips.forEach(chip => {
+      const f = chip.dataset.filter;
+      chip.querySelector('.count').textContent = [...cards].filter(c => matches(c, f)).length;
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.toggle('active', c === chip));
+        cards.forEach(card => card.classList.toggle('is-hidden', !matches(card, f)));
+        // Filtre TP : on masque les domaines de procédures pour que les TP remontent sous les filtres
+        document.querySelectorAll('.domain').forEach(d => d.classList.toggle('is-hidden', f === 'tp' && d.id !== 'tp'));
+        updateEmptyStates();
+      });
+    });
+
+    function FluidBg(id, opts={}) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
+      let t=0;
+      (function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.clearRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(19,16,42,0)'); v.addColorStop(1,'rgba(19,16,42,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  </script>
+  <script src="ambient.js"></script>
+</body>
+</html>

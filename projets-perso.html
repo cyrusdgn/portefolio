@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Projets personnels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #13102a;
+      --surface:   #1c1838;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(30,26,60,0.55); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active, .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(30,26,58,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; white-space: nowrap; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 600px; }
+
+    /* ── CONTENT ── */
+    .page-content { max-width: 1100px; margin: 0 auto; padding: 1rem 2rem 5rem; }
+
+    /* Grille prête à recevoir les cartes .proc-card (même format que la page Réalisations) */
+    .proc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+    .proc-grid:empty { display: none; }
+
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center; gap: 0.8rem; text-align: center;
+      padding: 3.5rem 2rem; border: 1px dashed rgba(255,255,255,0.12); border-radius: 18px;
+      background: var(--surface);
+    }
+    .proc-grid:not(:empty) + .empty-state { display: none; }
+    .empty-icon { width: 56px; height: 56px; border-radius: 14px; background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.25); display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .empty-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .empty-desc { font-size: 0.88rem; color: var(--muted); max-width: 420px; line-height: 1.7; }
+
+    /* ── IDÉES DE PROJETS ── */
+    .idea-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .idea {
+      display: flex; flex-direction: column; gap: 0.7rem;
+      background: var(--surface); border: 1px dashed rgba(45,212,191,0.35); border-radius: 16px;
+      padding: 1.4rem; transition: border-color 0.3s, transform 0.3s;
+      opacity: 0; animation: fadeUp 0.5s ease forwards;
+    }
+    .idea:nth-child(2) { animation-delay: 0.1s; }
+    .idea:nth-child(3) { animation-delay: 0.2s; }
+    .idea:hover { border-color: rgba(45,212,191,0.65); transform: translateY(-4px); }
+    .idea-top { display: flex; align-items: center; justify-content: space-between; }
+    .idea-icon { width: 44px; height: 44px; border-radius: 11px; background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3); display: flex; align-items: center; justify-content: center; color: #5eead4; }
+    .status { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.26rem 0.65rem; border-radius: 100px; background: rgba(45,212,191,0.15); color: #5eead4; border: 1px solid rgba(45,212,191,0.35); }
+    .idea-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.3; }
+    .idea-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.65; flex: 1; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .tags span { font-size: 0.72rem; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 100px; }
+    @media (max-width: 900px) { .idea-grid { grid-template-columns: 1fr; } }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 200px; position: relative; overflow: hidden; }
+    #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
+    .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .proc-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { padding: 2rem 1.5rem; }
+    }
+    @media (max-width: 560px) {
+      .proc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button>Parcours <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="formations.html">Formations</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li>
+        <button class="active">Réalisations <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="projets.html">Projets de formation</a></li>
+          <li><a href="projets-perso.html" class="active-sub">Projets personnels</a></li>
+        </ul>
+      </li>
+      <li><a href="competences.html">Compétences</a></li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille cybersécurité / informatique</a></li>
+          <li><a href="veille-juridique.html">Veille juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Contact</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Réalisations · Projets personnels</span>
+      <h1>Mes projets <span class="grad">personnels</span></h1>
+      <p>Les projets que je mène de ma propre initiative, en dehors de la formation et de l'alternance, pour explorer de nouvelles technologies. Voici ceux que j'ai prévu de réaliser.</p>
+    </div>
+  </section>
+
+  <div class="page-content">
+
+    <!-- Projets envisagés : passer le statut à "En cours" puis "Terminé" au fil de l'avancement -->
+    <div class="idea-grid">
+
+      <article class="idea">
+        <div class="idea-top">
+          <div class="idea-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/><path d="M7 6.5h.01M7 17.5h.01"/></svg>
+          </div>
+          <span class="status">À venir</span>
+        </div>
+        <h2 class="idea-title">Homelab Proxmox &amp; OPNsense</h2>
+        <p class="idea-desc">Monter un laboratoire à domicile pour tester des architectures en conditions réelles : hyperviseur Proxmox, pare-feu OPNsense, segmentation en VLAN et accès distant par VPN WireGuard.</p>
+        <div class="tags"><span>Proxmox</span><span>OPNsense</span><span>VLAN</span><span>WireGuard</span></div>
+      </article>
+
+      <article class="idea">
+        <div class="idea-top">
+          <div class="idea-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <span class="status">À venir</span>
+        </div>
+        <h2 class="idea-title">Mini-SOC avec Wazuh</h2>
+        <p class="idea-desc">Déployer un SIEM open source pour centraliser et corréler les journaux de mes machines, écrire des règles de détection et simuler quelques attaques pour vérifier les alertes.</p>
+        <div class="tags"><span>Wazuh</span><span>SIEM</span><span>Détection</span><span>Linux</span></div>
+      </article>
+
+      <article class="idea">
+        <div class="idea-top">
+          <div class="idea-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 12l3-3 3 3 5-5"/></svg>
+          </div>
+          <span class="status">À venir</span>
+        </div>
+        <h2 class="idea-title">Services auto-hébergés &amp; supervision</h2>
+        <p class="idea-desc">Héberger quelques services utiles (cloud personnel, gestionnaire de mots de passe) sous Docker derrière un reverse proxy, puis les superviser avec Prometheus et Grafana.</p>
+        <div class="tags"><span>Docker</span><span>Reverse proxy</span><span>Prometheus</span><span>Grafana</span></div>
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">Projets perso</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          if (item.classList.contains('open')) item.classList.remove('open');
+          else openItem();
+        });
+      }
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) navMenuItems.forEach(item => item.classList.remove('open'));
+    });
+
+    function FluidBg(id, opts={}) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
+      let t=0;
+      (function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.clearRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(19,16,42,0)'); v.addColorStop(1,'rgba(19,16,42,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  </script>
+  <script src="ambient.js"></script>
+</body>
+</html>

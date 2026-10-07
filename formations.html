@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyrus DEHGHAN — Formations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #13102a;
+      --surface:   #1c1838;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
+
+    /* ── NAV ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(30,26,60,0.55); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+    nav.scrolled { padding: 0.78rem 3rem; }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
+    .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active, .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
+    .nav-links > li:hover .chev { transform: rotate(180deg); }
+    .nav-links > li { position: relative; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(30,26,58,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; white-space: nowrap; }
+    .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, transform 0.15s; }
+    .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .page-hero { position: relative; overflow: hidden; min-height: 420px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 3rem; }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero-card { position: relative; z-index: 10; width: min(100%, 860px); margin: 0 auto; text-align: center; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-eyebrow { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.9rem; }
+    .hero-card h1 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .hero-card h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-card p { font-size: 0.98rem; color: var(--muted); line-height: 1.9; max-width: 700px; margin: 0 auto; }
+
+    /* ── MAIN ── */
+    .page-content { max-width: 1000px; margin: 0 auto; padding: 1rem 2rem 2rem; }
+    .reveal { opacity: 0; }
+    .reveal.in-view { animation: fadeUp 0.6s ease forwards; }
+
+    .section-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.1; margin-bottom: 1rem; }
+    .section-intro { font-size: 0.93rem; color: var(--muted); max-width: 680px; line-height: 1.8; margin: 0 auto 2.5rem; }
+    .center { text-align: center; }
+
+    /* ── BADGES ── */
+    .lvl { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.26rem 0.65rem; border-radius: 100px; white-space: nowrap; }
+    .lvl::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .lvl-bts  { background: rgba(45,45,255,0.85); color: #fff; }
+    .lvl-bach { background: rgba(192,132,252,0.92); color: #1a0b2e; }
+
+    /* ── PARCOURS BTS → BACHELOR ── */
+    .path { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.2rem; align-items: stretch; margin-bottom: 5rem; }
+    .path-card { display: flex; flex-direction: column; gap: 0.55rem; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; text-decoration: none; color: inherit; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .path-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.32); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
+    .path-card.bach { border-color: rgba(192,132,252,0.3); }
+    .path-date { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+    .path-card.bach .path-date { color: var(--pink); }
+    .path-title { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; line-height: 1.25; }
+    .path-school { font-size: 0.84rem; color: #a5b4fc; }
+    .path-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+    .path-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; color: var(--purple); font-size: 1.5rem; }
+    .path-arrow small { font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── FORMATION BLOCK ── */
+    .formation { margin-bottom: 5rem; scroll-margin-top: 90px; }
+    .formation-head { text-align: center; margin-bottom: 2.5rem; }
+    .formation-head .lvl { margin-bottom: 0.9rem; }
+
+    /* ── STATS ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .stat-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top center, rgba(45,45,255,0.08) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .stat-card:hover { transform: translateY(-6px); border-color: rgba(45,45,255,0.28); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-bubble { width: 68px; height: 68px; border-radius: 50%; background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.25); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: #a5b4fc; }
+    .bach-block .stat-bubble { background: rgba(192,132,252,0.12); border-color: rgba(192,132,252,0.3); color: #e9d5ff; }
+    .stat-title { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .stat-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.78; flex: 1; }
+    .stat-desc strong { color: var(--text); font-weight: 500; }
+    .stat-btn { position: relative; z-index: 3; margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 0.4rem; background: var(--blue); color: #fff; border: none; padding: 0.55rem 1.3rem; border-radius: 7px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; box-shadow: 0 4px 16px rgba(45,45,255,0.3); }
+    .stat-btn:hover { background: var(--blue-glow); transform: translateY(-1px); }
+
+    /* ── COMPÉTENCES ── */
+    .sub-heading { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; text-align: center; margin: 3.5rem 0 1.6rem; }
+    .comp-grid-top { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-bottom: 1.4rem; }
+    .comp-grid-bottom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; max-width: 660px; margin: 0 auto; }
+    .comp-grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
+    .comp-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .comp-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top center, rgba(45,45,255,0.08) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
+    .comp-card:hover { transform: translateY(-6px); border-color: rgba(45,45,255,0.28); box-shadow: 0 16px 48px rgba(0,0,0,0.42); }
+    .comp-card:hover::before { opacity: 1; }
+    .bach-block .comp-card { border-style: dashed; border-color: rgba(192,132,252,0.3); }
+    .comp-icon { width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+    .comp-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .comp-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.72; }
+
+    /* CTA */
+    .cta-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.9rem; padding: 2.5rem 0 0; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--blue); color: #fff; border: none; padding: 0.85rem 2rem; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 24px rgba(45,45,255,0.38); }
+    .btn-cta:hover { background: var(--blue-glow); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(45,45,255,0.52); }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--border); padding: 0.85rem 2rem; border-radius: 8px; font-size: 0.95rem; text-decoration: none; transition: border-color 0.2s, background 0.2s, transform 0.2s; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+
+    /* ── FLUID DIVIDER ── */
+    .fluid-divider { height: 120px; position: relative; overflow: hidden; margin-bottom: 3rem; }
+    #divider-canvas, #divider-canvas2 { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
+    .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 0.75rem; }
+    .footer-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+    .footer-icon:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .path { grid-template-columns: 1fr; }
+      .path-arrow { transform: rotate(90deg); }
+      .stats-grid, .comp-grid-top, .comp-grid-4 { grid-template-columns: 1fr; }
+      .comp-grid-bottom { grid-template-columns: 1fr; max-width: 100%; }
+      footer { padding: 2rem 1.5rem; }
+    }
+      /* nav-v2 : états actifs des menus déroulants */
+    .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-drop li a { white-space: nowrap; }
+    .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
+    .nav-cta { text-decoration: none; }
+
+    /* ── PROJET FIL ROUGE BTS : INFRASTRUCTURE FC CASTELLANE ── */
+    .infra { margin: 4rem 0 0; text-align: left; scroll-margin-top: 90px; }
+    .infra-intro { font-size: 0.9rem; color: var(--muted); line-height: 1.75; max-width: 760px; margin: 0.7rem 0 1.6rem; }
+    .infra-intro strong { color: var(--text); font-weight: 500; }
+    /* Schéma large à gauche ; le cadre s'étire à la hauteur des zones (fond blanc = celui du schéma) */
+    .infra-grid { display: grid; grid-template-columns: 1.7fr 1fr; gap: 1rem; align-items: stretch; }
+
+    .infra-schema { display: flex; align-items: center; justify-content: center; position: relative; text-decoration: none; background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .infra-schema:hover { transform: translateY(-4px); border-color: rgba(45,45,255,0.35); box-shadow: 0 18px 50px rgba(0,0,0,0.5); }
+    .infra-schema img { display: block; width: 100%; height: auto; }
+    .infra-schema .lvl { position: absolute; top: 12px; left: 12px; }
+    .proc-img-overlay { position: absolute; inset: 0; background: rgba(45,45,255,0.55); display: flex; align-items: center; justify-content: center; gap: 0.4rem; opacity: 0; transition: opacity 0.25s; color: #fff; font-size: 0.88rem; font-weight: 500; }
+    .infra-schema:hover .proc-img-overlay { opacity: 1; }
+
+    .zones { display: flex; flex-direction: column; gap: 0.55rem; }
+    .zone { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--zone, var(--blue)); border-radius: 10px; padding: 0.6rem 0.8rem 0.7rem; }
+    .zone-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+    .zone-title { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; }
+    .zone-net { font-size: 0.64rem; color: var(--muted); font-family: ui-monospace, Consolas, monospace; }
+    .zone-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.45; margin: 0.2rem 0 0.4rem; }
+    .zone-links { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .zone-links a { font-size: 0.64rem; color: #c7d2fe; text-decoration: none; background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.25); padding: 0.1rem 0.45rem; border-radius: 100px; transition: background 0.15s, border-color 0.15s; }
+    .zone-links a:hover { background: rgba(45,45,255,0.25); border-color: rgba(45,45,255,0.5); }
+
+    @media (max-width: 900px) { .infra-grid { grid-template-columns: 1fr; } }
+
+    /* ── Cartes compactes et centrées ── */
+    .path { max-width: 860px; margin-left: auto; margin-right: auto; }
+    .path-card { padding: 1.25rem 1.3rem; gap: 0.4rem; }
+    .path-title { font-size: 1rem; }
+    .path-desc { font-size: 0.8rem; }
+
+    .stats-grid, .comp-grid-top { max-width: 820px; margin-left: auto; margin-right: auto; gap: 1rem; }
+    .comp-grid-top { margin-bottom: 1rem; }
+    .comp-grid-bottom { max-width: 540px; gap: 1rem; }
+    .comp-grid-4 { max-width: 640px; margin-left: auto; margin-right: auto; gap: 1rem; }
+
+    .stat-card, .comp-card { padding: 1.3rem 1.1rem; gap: 0.6rem; border-radius: 14px; }
+    .stat-bubble { width: 48px; height: 48px; font-size: 1.3rem; }
+    .stat-bubble svg { width: 22px; height: 22px; }
+    .stat-title, .comp-title { font-size: 0.92rem; }
+    .stat-desc, .comp-desc { font-size: 0.8rem; line-height: 1.6; }
+    .stat-btn { padding: 0.45rem 1rem; font-size: 0.78rem; margin-top: 0.2rem; }
+    .comp-icon { width: 46px; height: 46px; }
+    .comp-icon svg { width: 46px; height: 46px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Cyrus DEHGHAN</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Accueil</a></li>
+      <li>
+        <button class="active">Parcours <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="apropos.html">À propos de moi</a></li>
+          <li><a href="formations.html" class="active-sub">Formations</a></li>
+          <li><a href="alternance.html">Alternance</a></li>
+        </ul>
+      </li>
+      <li>
+        <button>Réalisations <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="projets.html">Projets de formation</a></li>
+          <li><a href="projets-perso.html">Projets personnels</a></li>
+        </ul>
+      </li>
+      <li><a href="competences.html">Compétences</a></li>
+      <li>
+        <button>Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <ul class="nav-drop">
+          <li><a href="veille-info.html">Veille cybersécurité / informatique</a></li>
+          <li><a href="veille-juridique.html">Veille juridique</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Contact</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-card">
+      <p class="hero-eyebrow">Parcours · Formations</p>
+      <h1>Du BTS SIO SISR<br><span class="grad">au Bachelor Cybersécurité</span></h1>
+      <p>Deux formations, une même trajectoire : le BTS m'a donné les bases techniques pour installer et administrer des infrastructures ; le Bachelor me prépare à les concevoir, piloter leur mise en œuvre et les sécuriser.</p>
+    </div>
+  </section>
+
+  <div class="page-content">
+
+    <!-- Trajectoire -->
+    <section class="path reveal">
+      <a class="path-card" href="#bts">
+        <span class="lvl lvl-bts">BTS · Exécution</span>
+        <span class="path-date">2024 — 2026 · Bac+2</span>
+        <span class="path-title">BTS SIO — option SISR</span>
+        <span class="path-school">ENSITECH, Marseille · en alternance</span>
+        <span class="path-desc">Administration système, réseaux, sécurité et support utilisateur. Alternance chez Econocom, en mission chez Skeepers.</span>
+      </a>
+      <div class="path-arrow">→<small>Progression</small></div>
+      <a class="path-card bach" href="#bachelor">
+        <span class="lvl lvl-bach">Bachelor · Conception · Pilotage</span>
+        <span class="path-date">2026 — 2027 · Bac+3</span>
+        <span class="path-title">Bachelor Informatique et Cybersécurité</span>
+        <span class="path-school">IFC, Marseille · Chef de projet systèmes, réseaux et sécurité</span>
+        <span class="path-desc">Conception d'architectures, gestion de projet d'infrastructure et sécurisation du système d'information. Alternance poursuivie chez Econocom, en mission chez Skeepers, jusqu'en août 2027.</span>
+      </a>
+    </section>
+
+    <!-- ═══════════════ BTS ═══════════════ -->
+    <section class="formation" id="bts">
+
+      <div class="formation-head reveal">
+        <span class="lvl lvl-bts">BTS · 2024 — 2026</span>
+        <p class="section-eyebrow">Diplôme national · Niveau 5 (Bac+2) · 2 années · SISR · SLAM</p>
+        <h2 class="section-heading">BTS Services Informatiques aux Organisations</h2>
+        <p class="section-intro">Le BTS SIO forme des professionnels polyvalents, capables de relever les défis numériques des organisations modernes. Dans le domaine de l'infrastructure ou du développement, ce diplôme trace une voie solide vers le monde de l'informatique.</p>
+      </div>
+
+      <div class="stats-grid reveal">
+
+        <div class="stat-card">
+          <div class="stat-bubble">2</div>
+          <div class="stat-title">Durée de 2 ans</div>
+          <div class="stat-desc">En 2 ans, le BTS SIO combine enseignements théoriques et pratiques professionnelles. Cette formation permet d'acquérir des <strong>compétences solides</strong> pour une <strong>insertion rapide</strong> dans le monde de l'informatique.</div>
+          <a href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-services-informatiques-aux-organisations-option-a-solutions-d-infrastructure-systemes-et-reseaux" target="_blank" rel="noopener noreferrer" class="stat-btn">Plus d'infos
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-bubble">2</div>
+          <div class="stat-title">Diplôme Bac +2</div>
+          <div class="stat-desc">C'est un <strong>diplôme national</strong> de niveau Bac +2, reconnu par l'État et par les entreprises du secteur numérique. Il valide deux années d'études alliant théorie et pratique, <strong>préparant efficacement</strong> aux métiers de l'informatique.</div>
+          <a href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-services-informatiques-aux-organisations-option-a-solutions-d-infrastructure-systemes-et-reseaux" target="_blank" rel="noopener noreferrer" class="stat-btn">Plus d'infos
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-bubble">2</div>
+          <div class="stat-title">2 spécialisations</div>
+          <div class="stat-desc">2 spécialisations : <strong>SISR</strong> (Solutions d'Infrastructure, Systèmes et Réseaux) et <strong>SLAM</strong> (Solutions Logicielles et Applications Métiers). Ces parcours permettent de se former aux métiers de l'administration des réseaux ou du développement d'applications.</div>
+          <a href="https://www.onisep.fr/ressources/univers-formation/formations/post-bac/bts-services-informatiques-aux-organisations-option-a-solutions-d-infrastructure-systemes-et-reseaux" target="_blank" rel="noopener noreferrer" class="stat-btn">Plus d'infos
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+
+      </div>
+
+      <h3 class="sub-heading reveal">Compétences et Outils — BTS SIO SISR</h3>
+
+      <div class="comp-grid-top reveal">
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(45,45,255,0.1)"/>
+              <rect x="11" y="17" width="15" height="24" rx="3" fill="#2d2dff" opacity="0.9"/>
+              <rect x="32" y="17" width="15" height="24" rx="3" fill="#8b5cf6" opacity="0.9"/>
+              <rect x="18" y="24" width="22" height="10" rx="2" fill="#c084fc" opacity="0.55"/>
+            </svg>
+          </div>
+          <div class="comp-title">Administration système</div>
+          <div class="comp-desc">Gérer, sécuriser et maintenir les serveurs et postes informatiques d'une organisation.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(45,45,255,0.1)"/>
+              <circle cx="29" cy="29" r="13" stroke="#2d2dff" stroke-width="2.5" fill="none"/>
+              <path d="M22 29 L26 33 L36 23" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="29" cy="29" r="20" stroke="#c084fc" stroke-width="1" stroke-dasharray="3 3" fill="none"/>
+            </svg>
+          </div>
+          <div class="comp-title">Cybersécurité</div>
+          <div class="comp-desc">Sécuriser et protéger les infrastructures informatiques contre les menaces numériques.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(45,45,255,0.1)"/>
+              <circle cx="15" cy="29" r="5" fill="#2d2dff"/>
+              <circle cx="43" cy="29" r="5" fill="#8b5cf6"/>
+              <circle cx="29" cy="16" r="5" fill="#c084fc"/>
+              <line x1="20" y1="29" x2="38" y2="29" stroke="#2d2dff" stroke-width="2"/>
+              <line x1="17.5" y1="24.5" x2="26.5" y2="18.5" stroke="#8b5cf6" stroke-width="2"/>
+              <line x1="40.5" y1="24.5" x2="31.5" y2="18.5" stroke="#c084fc" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="comp-title">Gestion réseau</div>
+          <div class="comp-desc">Administrer, sécuriser et optimiser les connexions et infrastructures informatiques d'une organisation.</div>
+        </div>
+
+      </div>
+
+      <div class="comp-grid-bottom reveal">
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(45,45,255,0.1)"/>
+              <rect x="13" y="19" width="32" height="20" rx="3" fill="none" stroke="#2d2dff" stroke-width="2"/>
+              <rect x="18" y="24" width="9" height="9" rx="2" fill="#8b5cf6" opacity="0.85"/>
+              <rect x="31" y="24" width="9" height="9" rx="2" fill="#c084fc" opacity="0.65"/>
+              <path d="M13 23 Q29 13 45 23" stroke="#a5b4fc" stroke-width="1.5" fill="none" stroke-dasharray="2 2"/>
+            </svg>
+          </div>
+          <div class="comp-title">Virtualisation</div>
+          <div class="comp-desc">Créer et gérer des environnements informatiques virtuels pour optimiser les ressources et simplifier l'administration des systèmes.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(45,45,255,0.1)"/>
+              <circle cx="29" cy="29" r="15" stroke="#2d2dff" stroke-width="2" fill="none"/>
+              <circle cx="29" cy="29" r="9"  stroke="#8b5cf6" stroke-width="1.5" fill="none"/>
+              <circle cx="29" cy="29" r="4"  fill="#c084fc"/>
+              <line x1="29" y1="14" x2="29" y2="20" stroke="#2d2dff" stroke-width="2" stroke-linecap="round"/>
+              <line x1="29" y1="38" x2="29" y2="44" stroke="#2d2dff" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="29" x2="20" y2="29" stroke="#2d2dff" stroke-width="2" stroke-linecap="round"/>
+              <line x1="38" y1="29" x2="44" y2="29" stroke="#2d2dff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="comp-title">Supervision</div>
+          <div class="comp-desc">Surveiller et contrôler en temps réel les systèmes et réseaux pour garantir leur bon fonctionnement et anticiper les incidents.</div>
+        </div>
+
+      </div>
+
+    <!-- ═══════════════ INFRASTRUCTURE DE RÉFÉRENCE (BTS) ═══════════════ -->
+    <section class="infra reveal" id="fc-castellane">
+      <p class="section-eyebrow">Projet fil rouge · BTS</p>
+      <h2 class="section-heading">Infrastructure FC Castellane</h2>
+      <p class="infra-intro">La plupart de mes procédures BTS ont été réalisées sur <strong>une même infrastructure</strong>, conçue pour le contexte du FC Castellane : un routeur Zyxel, un switch Netgear segmenté en VLAN, un hyperviseur <strong>Proxmox</strong> qui héberge les services internes, et une <strong>DMZ</strong> pour les serveurs web exposés. Chaque zone du schéma renvoie vers les procédures correspondantes.</p>
+
+      <div class="infra-grid">
+
+        <a class="infra-schema" href="Dossiers/schema-reseau.jfif" target="_blank" rel="noopener noreferrer">
+          <img src="Dossiers/schema-reseau.jfif" alt="Schéma de l'infrastructure FC Castellane : routeur Zyxel, switch Netgear, VLAN10 Bâtiment avec Proxmox, VLAN20 Wi-Fi visiteurs et DMZ" />
+          <span class="lvl lvl-bts">BTS</span>
+          <div class="proc-img-overlay">
+            <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Ouvrir le schéma en grand
+          </div>
+        </a>
+
+        <div class="zones">
+
+          <div class="zone" style="--zone:#ef4444;">
+            <div class="zone-head">
+              <span class="zone-title">Cœur de réseau</span>
+              <span class="zone-net">10.3.1.0/29</span>
+            </div>
+            <p class="zone-desc">Routeur Zyxel USG FLEX (WAN, VPN) et switch Netgear (VLAN 10 et 20).</p>
+            <div class="zone-links">
+              <a href="Dossiers/Procedure%20VPN%20IKEv2.pdf" target="_blank" rel="noopener noreferrer">VPN IKEv2</a>
+            </div>
+          </div>
+
+          <div class="zone" style="--zone:#f87171;">
+            <div class="zone-head">
+              <span class="zone-title">VLAN10 · Bâtiment</span>
+              <span class="zone-net">192.168.10.0/24</span>
+            </div>
+            <p class="zone-desc">Proxmox : 2 contrôleurs de domaine (dont Exchange), services d'infrastructure, clients Windows 11 et sauvegarde.</p>
+            <div class="zone-links">
+              <a href="Dossiers/Procedure%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">Zabbix</a>
+              <a href="Dossiers/Procedure%20Trigger%20Zabbix.pdf" target="_blank" rel="noopener noreferrer">Trigger Zabbix</a>
+              <a href="Dossiers/Procedure%20Artica.pdf" target="_blank" rel="noopener noreferrer">Artica</a>
+              <a href="Dossiers/Procedure%20XiVO.pdf" target="_blank" rel="noopener noreferrer">XiVO</a>
+              <a href="Dossiers/Procedure%20FOG.pdf" target="_blank" rel="noopener noreferrer">FOG</a>
+            </div>
+          </div>
+
+          <div class="zone" style="--zone:#f472b6;">
+            <div class="zone-head">
+              <span class="zone-title">VLAN20 · Wi-Fi visiteurs</span>
+              <span class="zone-net">192.168.20.0/24</span>
+            </div>
+            <p class="zone-desc">Borne UniFi isolée du réseau interne pour les visiteurs.</p>
+            <div class="zone-links">
+              <a href="Dossiers/Procedure%20UniFi.pdf" target="_blank" rel="noopener noreferrer">UniFi</a>
+            </div>
+          </div>
+
+          <div class="zone" style="--zone:#22c55e;">
+            <div class="zone-head">
+              <span class="zone-title">DMZ</span>
+              <span class="zone-net">192.168.31.0/29</span>
+            </div>
+            <p class="zone-desc">Zone exposée : Proxmox (vmbr1_dmz), Hyper-V et répartiteur Zevenet devant WEB1 et WEB2.</p>
+            <div class="zone-links">
+              <a href="Dossiers/Procedure%20DMZ.pdf" target="_blank" rel="noopener noreferrer">DMZ · haute disponibilité</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+      <div class="cta-row reveal">
+        <a href="projets.html" class="btn-cta">
+          Voir mes réalisations BTS
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="tcs.html" class="btn-ghost">Tableau de synthèse (TCS)</a>
+        <a href="dossiers.html" class="btn-ghost">Dossiers E5 · E6</a>
+        <a href="apropos.html#certifs" class="btn-ghost">Certifications CCNA</a>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- FLUID DIVIDER -->
+  <div class="fluid-divider">
+    <canvas id="divider-canvas"></canvas>
+    <div class="divider-overlay"></div>
+    <div class="divider-text">BTS → Bachelor</div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- ═══════════════ BACHELOR ═══════════════ -->
+    <section class="formation bach-block" id="bachelor">
+
+      <div class="formation-head reveal">
+        <span class="lvl lvl-bach">Bachelor · 2026 — 2027</span>
+        <p class="section-eyebrow">IFC Marseille · Bac +3</p>
+        <h2 class="section-heading">Bachelor Informatique et Cybersécurité</h2>
+        <p class="section-intro">Parcours <strong style="color:var(--text); font-weight:500;">Chef de projet systèmes, réseaux et sécurité</strong> : formation de niveau Bac+3 visant à concevoir, piloter et sécuriser des infrastructures systèmes et réseaux, avec une montée en compétences sur la gestion de projet et la cybersécurité.</p>
+      </div>
+
+      <div class="stats-grid reveal">
+
+        <div class="stat-card">
+          <div class="stat-bubble">3</div>
+          <div class="stat-title">Niveau Bac +3</div>
+          <div class="stat-desc">Une troisième année qui prolonge le BTS SIO et fait passer d'un rôle de <strong>technicien</strong> à celui de <strong>chef de projet</strong> sur les infrastructures.</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-bubble">1</div>
+          <div class="stat-title">1 année · 2026 — 2027</div>
+          <div class="stat-desc">Une année centrée sur la <strong>conception</strong> et le <strong>pilotage</strong> : architecture, gestion de projet et sécurité du système d'information.</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-bubble">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div class="stat-title">Cybersécurité</div>
+          <div class="stat-desc">La sécurité devient transversale : chaque infrastructure est pensée <strong>sécurisée dès la conception</strong>, de l'analyse de risques à la conformité.</div>
+        </div>
+
+      </div>
+
+      <h3 class="sub-heading reveal">Compétences visées — Bachelor</h3>
+
+      <div class="comp-grid-4 reveal">
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(192,132,252,0.12)"/>
+              <rect x="14" y="15" width="11" height="11" rx="2" stroke="#c084fc" stroke-width="2"/>
+              <rect x="33" y="15" width="11" height="11" rx="2" stroke="#8b5cf6" stroke-width="2"/>
+              <rect x="23.5" y="33" width="11" height="11" rx="2" stroke="#2d2dff" stroke-width="2"/>
+              <path d="M19.5 26v4h19v-4M29 30v3" stroke="#a5b4fc" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <div class="comp-title">Conception d'architectures</div>
+          <div class="comp-desc">Concevoir des infrastructures systèmes et réseaux adaptées aux besoins, dimensionnées et documentées.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(192,132,252,0.12)"/>
+              <rect x="14" y="17" width="30" height="5" rx="2.5" fill="#2d2dff" opacity="0.9"/>
+              <rect x="20" y="26" width="22" height="5" rx="2.5" fill="#8b5cf6" opacity="0.9"/>
+              <rect x="26" y="35" width="16" height="5" rx="2.5" fill="#c084fc" opacity="0.9"/>
+            </svg>
+          </div>
+          <div class="comp-title">Pilotage de projet</div>
+          <div class="comp-desc">Cadrer un projet d'infrastructure, planifier, coordonner les intervenants et suivre budget et délais.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(192,132,252,0.12)"/>
+              <path d="M29 44s12-6 12-15V19l-12-4.5L17 19v10c0 9 12 15 12 15z" stroke="#c084fc" stroke-width="2" fill="none"/>
+              <path d="M24 29l3.5 3.5L34 26" stroke="#8b5cf6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="comp-title">Sécurisation du SI</div>
+          <div class="comp-desc">Analyser les risques, définir une politique de sécurité et durcir systèmes, réseaux et accès.</div>
+        </div>
+
+        <div class="comp-card">
+          <div class="comp-icon">
+            <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+              <rect width="58" height="58" rx="29" fill="rgba(192,132,252,0.12)"/>
+              <rect x="16" y="14" width="26" height="30" rx="3" stroke="#8b5cf6" stroke-width="2" fill="none"/>
+              <path d="M21 22h16M21 28h16M21 34h10" stroke="#c084fc" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="comp-title">Gouvernance &amp; conformité</div>
+          <div class="comp-desc">Intégrer les exigences réglementaires et les bonnes pratiques dans l'exploitation et l'évolution du SI.</div>
+        </div>
+
+      </div>
+
+      <div class="cta-row reveal">
+        <a href="competences.html" class="btn-cta">
+          Voir ma progression par compétence
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
+    <div class="footer-links">
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          if (item.classList.contains('open')) item.classList.remove('open');
+          else openItem();
+        });
+      }
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) navMenuItems.forEach(item => item.classList.remove('open'));
+    });
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    function FluidBg(id, opts={}) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
+      let W, H;
+      function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
+      const rgbs = colors.map(hex2rgb);
+      const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
+      let t=0;
+      (function tick() {
+        t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
+        ctx.clearRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(19,16,42,0)'); v.addColorStop(1,'rgba(19,16,42,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        requestAnimationFrame(tick);
+      })();
+    }
+
+    const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
+    FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
+    FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
+  </script>
+  <script src="ambient.js"></script>
+</body>
+</html>

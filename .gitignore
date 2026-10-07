@@ -1,0 +1,7 @@
+# Fichiers système Windows / OneDrive
+desktop.ini
+Thumbs.db
+~$*
+
+# Configuration locale de l'éditeur
+.vscode/

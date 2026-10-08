@@ -9,130 +9,136 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #13102a; --surface: #1c1838; --blue: #2d2dff; --blue-glow: #4f4fff;
-      --purple: #8b5cf6; --pink: #c084fc; --text: #f0f0f8; --muted: #7d7d9a;
-      --border: rgba(255,255,255,0.07);
+      --bg:        #13102a;
+      --surface:   #1c1838;
+      --blue:      #2d2dff;
+      --blue-glow: #4f4fff;
+      --purple:    #8b5cf6;
+      --pink:      #c084fc;
+      --text:      #f0f0f8;
+      --muted:     #7d7d9a;
+      --border:    rgba(255,255,255,0.07);
     }
+
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; overflow-x: hidden; }
     body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; display: flex; align-items: center; justify-content: space-between; padding: 1.15rem 3rem; background: rgba(30,26,60,0.55); backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
     nav.scrolled { padding: 0.78rem 3rem; }
     .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--text); text-decoration: none; flex-shrink: 0; }
     .nav-links { display: flex; align-items: center; gap: 0.05rem; list-style: none; }
     .nav-links > li > a, .nav-links > li > button { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 400; letter-spacing: 0.015em; padding: 0.38rem 0.72rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.22rem; transition: color 0.18s, background 0.18s; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
-    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-links > li > a:hover, .nav-links > li > button:hover, .nav-links > li > a.active, .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .chev { width: 9px; height: 9px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.22s; }
     .nav-links > li:hover .chev { transform: rotate(180deg); }
     .nav-links > li { position: relative; }
-    .nav-drop { position: absolute; top: calc(100% + 10px); left: 0; min-width: 180px; background: rgba(30,26,58,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
-    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; }
+    .nav-drop { position: absolute; top: 100%; left: 0; min-width: 180px; background: rgba(30,26,58,0.97); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; backdrop-filter: blur(28px); padding: 0.45rem; list-style: none; opacity: 0; pointer-events: none; transform: translateY(7px); transition: opacity 0.2s, transform 0.2s; z-index: 400; }
+    .nav-links > li:hover .nav-drop,
+    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
+    .nav-links > li.open .chev { transform: rotate(180deg); }
+    .nav-drop li a { display: block; padding: 0.48rem 0.88rem; color: var(--muted); text-decoration: none; font-size: 0.815rem; border-radius: 7px; transition: color 0.15s, background 0.15s; white-space: nowrap; }
     .nav-drop li a:hover, .nav-drop li a.active-sub { color: var(--text); background: rgba(45,45,255,0.14); }
-    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
+    .nav-cta { flex-shrink: 0; background: var(--blue); color: #fff; border: none; padding: 0.52rem 1.25rem; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; letter-spacing: 0.02em; text-decoration: none; transition: background 0.2s, transform 0.15s; }
     .nav-cta:hover { background: var(--blue-glow); transform: translateY(-1px); }
 
-    /* HERO */
+    /* ── HERO ── */
     .page-hero { position: relative; overflow: hidden; min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 8rem 2rem 4rem; }
     #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-    .hero-fade { position: absolute; inset: 0; z-index: 1; background: rgba(19,16,42,0.62); }
-    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
+    .hero-content { position: relative; z-index: 10; text-align: center; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: 1rem; opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s; }
     .hero-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
-    .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero-content p { font-size: 0.975rem; color: var(--muted); line-height: 1.8; max-width: 540px; }
-    .hero-pill-link { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.13); color: var(--muted); text-decoration: none; font-size: 0.8rem; padding: 0.45rem 1.1rem; border-radius: 100px; transition: background 0.2s, color 0.2s; margin-top: 0.25rem; }
-    .hero-pill-link:hover { background: rgba(45,45,255,0.15); color: var(--text); border-color: rgba(45,45,255,0.35); }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; }
+    .hero-content h1 .grad { background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 50%, var(--pink) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 0.95rem; color: var(--muted); line-height: 1.8; max-width: 600px; }
 
-    /* CONTENT */
-    .page-content { max-width: 960px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+    /* ── CONTENT ── */
+    .page-content { max-width: 1060px; margin: 0 auto; padding: 1rem 2rem 5rem; }
+    .sec-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.4rem; }
+    .sec-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 2.5vw, 1.8rem); font-weight: 700; line-height: 1.15; }
 
-    /* DEFINITION */
-    .def-block { margin-bottom: 4rem; }
-    .def-block h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
-    .def-text { font-size: 0.96rem; color: var(--muted); line-height: 1.9; text-align: center; max-width: 680px; margin: 0 auto 1.25rem; }
-    .def-text strong { color: var(--text); font-weight: 500; }
+    .reveal { opacity: 0; }
+    .reveal.in-view { animation: fadeUp 0.6s ease forwards; }
 
-    /* Image placeholder */
-    .img-placeholder { width: 100%; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; text-align: center; padding: 2.5rem; min-height: 200px; }
-    .img-placeholder p { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
-    .img-placeholder span { font-size: 0.72rem; color: rgba(255,255,255,0.2); font-family: monospace; }
-    /* Real image */
-    .side-img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block; }
+    /* ── BADGES ── */
+    .lvl { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.26rem 0.65rem; border-radius: 100px; white-space: nowrap; }
+    .lvl::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .lvl-bts  { background: rgba(45,45,255,0.85); color: #fff; }
+    .lvl-bach { background: rgba(192,132,252,0.92); color: #1a0b2e; }
 
-    /* SEP */
-    .sep { height: 1px; background: var(--border); margin: 3.5rem 0; }
+    /* ── PROGRESSION ── */
+    .progression { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 1.8rem 1.8rem 1.5rem; margin-bottom: 4rem; }
+    .prog-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 1.4rem; }
+    .prog-step { position: relative; padding-top: 1.4rem; }
+    .prog-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; border-radius: 100px; }
+    .prog-step.bts::before  { background: linear-gradient(90deg, var(--blue), #4f4fff); }
+    .prog-step.bach::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+    .prog-step-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+    .prog-step-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; margin-top: 0.2rem; }
+    .prog-legend { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.4rem; font-size: 0.8rem; color: var(--muted); }
+    .prog-legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
 
-    /* SUJET — side by side layout */
-    .sujet-header { text-align: center; margin-bottom: 3rem; }
-    .sujet-eyebrow { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
-    .sujet-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
+    /* ── BLOCS DE COMPÉTENCES ── */
+    .skill { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 1.7rem; margin-bottom: 1.5rem; scroll-margin-top: 100px; transition: border-color 0.3s; }
+    .skill:hover { border-color: rgba(45,45,255,0.25); }
+    .skill-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; }
+    .skill-icon { width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: rgba(45,45,255,0.12); border: 1px solid rgba(45,45,255,0.25); display: flex; align-items: center; justify-content: center; color: #a5b4fc; }
+    .skill-head .sec-heading { font-size: 1.25rem; }
 
-    /* Content row: text left, image right */
-    .content-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;
-      align-items: center; margin-bottom: 3rem;
-    }
-    .content-row.reverse { direction: rtl; }
-    .content-row.reverse > * { direction: ltr; }
+    .skill-cols { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.2rem; align-items: stretch; }
+    .skill-col { border-radius: 14px; padding: 1.15rem 1.25rem; }
+    .skill-col.bts  { background: rgba(45,45,255,0.06); border: 1px solid rgba(45,45,255,0.18); }
+    .skill-col.bach { background: rgba(192,132,252,0.05); border: 1px dashed rgba(192,132,252,0.35); }
+    .skill-col-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+    .skill-col-status { font-size: 0.72rem; color: var(--muted); }
+    .skill-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+    .skill-col li { font-size: 0.86rem; color: #c9c9dc; line-height: 1.55; padding-left: 1.1rem; position: relative; }
+    .skill-col.bts li::before  { content: '✓'; position: absolute; left: 0; color: #818cf8; font-size: 0.78rem; }
+    .skill-col.bach li::before { content: '→'; position: absolute; left: 0; color: var(--pink); font-size: 0.78rem; }
+    .skill-arrow { display: flex; align-items: center; color: var(--purple); font-size: 1.3rem; }
 
-    .content-text h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
-    .content-text p { font-size: 0.93rem; color: var(--muted); line-height: 1.82; }
-    .content-text p strong { color: var(--text); font-weight: 500; }
+    .skill-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 1.2rem; }
+    .tools { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tool { font-size: 0.74rem; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 0.22rem 0.65rem; border-radius: 100px; }
+    .see-more { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 500; color: #a5b4fc; text-decoration: none; padding: 0.4rem 0.9rem; border: 1px solid rgba(45,45,255,0.3); border-radius: 8px; transition: background 0.2s, border-color 0.2s; white-space: nowrap; }
+    .see-more:hover { background: rgba(45,45,255,0.12); border-color: rgba(45,45,255,0.5); }
 
-    .content-image { border-radius: 14px; overflow: hidden; min-height: 220px; }
+    /* ── VEILLE ── */
+    .hero-content .see-more { margin-top: 0.3rem; }
+    .hero-content p strong { color: var(--text); font-weight: 500; }
+    .skill-col .col-lead { font-size: 0.88rem; color: var(--text); line-height: 1.6; margin-bottom: 0.7rem; }
+    .skill-col .done { color: var(--pink); font-weight: 500; }
+    .week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.35rem; margin-top: 0.9rem; }
+    .day { border-radius: 8px; padding: 0.4rem 0.2rem; text-align: center; font-size: 0.68rem; font-weight: 500; }
+    .day.site { background: rgba(45,45,255,0.16); border: 1px solid rgba(79,107,255,0.45); color: #c7d2fe; }
+    .day.remote { background: rgba(192,132,252,0.14); border: 1px solid rgba(192,132,252,0.45); color: #ead7fe; }
+    .prog-legend > span { flex-wrap: wrap; }
+    .prog-legend .tools { display: inline-flex; }
 
-    /* Articles manuels */
-    .section-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; text-align: center; }
-    .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
-
-    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1rem; }
-    .article-card { display: block; text-decoration: none; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem 1.25rem; position: relative; overflow: hidden; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
-    .article-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(45,45,255,0.08) 0%, transparent 65%); opacity: 0; transition: opacity 0.3s; }
-    .article-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.3); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
-    .article-card:hover::before { opacity: 1; }
-    .article-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.75rem; }
-    .article-icon { width: 44px; height: 44px; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #a5b4fc; margin-bottom: 1rem; }
-    .article-label { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
-    .article-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
-    .article-arrow { position: absolute; bottom: 1.25rem; right: 1.25rem; color: var(--blue); font-size: 0.9rem; opacity: 0; transform: translateX(-4px); transition: opacity 0.2s, transform 0.2s; }
-    .article-card:hover .article-arrow { opacity: 1; transform: translateX(0); }
-
-    /* RSS NEWS SECTION */
-    .rss-section { margin-top: 4rem; }
-    .rss-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
-    .rss-title-block .section-label { text-align: left; margin-bottom: 0.3rem; }
-    .rss-title-block .section-heading { text-align: left; margin-bottom: 0; }
-    .rss-badge { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(45,45,255,0.1); border: 1px solid rgba(45,45,255,0.25); color: #a5b4fc; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; padding: 0.3rem 0.8rem; border-radius: 100px; }
-    .rss-badge::before { content: ''; width: 6px; height: 6px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 6px #22c55e; animation: blink 2s ease infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    .rss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-
-    .rss-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; }
-    .rss-card:hover { transform: translateY(-5px); border-color: rgba(45,45,255,0.3); box-shadow: 0 14px 40px rgba(0,0,0,0.45); }
-
-    .rss-card-img { width: 100%; height: 140px; object-fit: cover; background: rgba(45,45,255,0.08); display: flex; align-items: center; justify-content: center; }
-    .rss-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .rss-img-placeholder { width: 100%; height: 140px; background: rgba(45,45,255,0.06); display: flex; align-items: center; justify-content: center; color: var(--muted); }
-
-    .rss-card-body { padding: 1.1rem 1.1rem 1.25rem; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
-    .rss-source { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
-    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    /* ── ACTUALITÉS ── */
+    .news-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.3rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 0.36rem 0.85rem; border-radius: 100px; cursor: pointer; transition: color 0.18s, background 0.18s, border-color 0.18s; }
+    .chip:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .chip.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+    .rss-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .rss-card { display: flex; flex-direction: column; gap: 0.45rem; padding: 1rem 1.1rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; text-decoration: none; color: inherit; transition: transform 0.3s, border-color 0.3s; }
+    .rss-card:hover { transform: translateY(-4px); border-color: rgba(45,45,255,0.45); }
+    .rss-source { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8b93ff; }
+    .rss-card-title { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .rss-card-date { font-size: 0.72rem; color: var(--muted); margin-top: auto; }
+    .rss-loading, .rss-error { grid-column: 1 / -1; text-align: center; padding: 1.4rem; font-size: 0.86rem; color: var(--muted); border: 1px dashed var(--border); border-radius: 14px; }
+    .rss-error a { color: #a5b4fc; }
 
-    .rss-loading { grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--muted); font-size: 0.9rem; }
-    .rss-error { grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
-
-    /* FLUID DIVIDER */
+    /* ── FLUID DIVIDER ── */
     .fluid-divider { height: 200px; position: relative; overflow: hidden; }
     #divider-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
     .divider-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 12%, transparent 88%, var(--bg) 100%), linear-gradient(to bottom, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
     .divider-text { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; height: 100%; font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.8rem); font-weight: 800; color: rgba(255,255,255,0.055); letter-spacing: 0.18em; text-transform: uppercase; user-select: none; }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
     .footer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.88rem; color: var(--muted); }
     .footer-links { display: flex; gap: 0.75rem; }
@@ -144,17 +150,13 @@
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
-      .content-row { grid-template-columns: 1fr; }
-      .content-row.reverse { direction: ltr; }
-      .articles-grid, .rss-grid { grid-template-columns: 1fr; }
-      .page-content { padding: 3rem 1.5rem 4rem; }
+      .page-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .prog-track { grid-template-columns: 1fr; gap: 1rem; }
+      .skill-cols { grid-template-columns: 1fr; }
+      .skill-arrow { justify-content: center; transform: rotate(90deg); }
+      .rss-grid { grid-template-columns: 1fr; }
       footer { padding: 2rem 1.5rem; }
     }
-  
-    /* ── DROPDOWN CLICK ── */
-    .nav-links > li.open .nav-drop { opacity: 1; pointer-events: all; transform: translateY(0); }
-    .nav-links > li.open .chev { transform: rotate(180deg); }
-
       /* nav-v2 : états actifs des menus déroulants */
     .nav-links > li > button.active { color: var(--text); background: rgba(255,255,255,0.05); }
     .nav-drop li a { white-space: nowrap; }
@@ -179,7 +181,7 @@
       <li>
         <button>Réalisations <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
         <ul class="nav-drop">
-          <li><a href="projets.html">Projets de formation</a></li>
+          <li><a href="projets.html">Projets scolaires</a></li>
           <li><a href="projets-perso.html">Projets personnels</a></li>
         </ul>
       </li>
@@ -187,7 +189,7 @@
       <li>
         <button class="active">Veilles <svg class="chev" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
         <ul class="nav-drop">
-          <li><a href="veille-info.html" class="active-sub">Veille cybersécurité / informatique</a></li>
+          <li><a href="veille-info.html" class="active-sub">Veille informatique</a></li>
           <li><a href="veille-juridique.html">Veille juridique</a></li>
         </ul>
       </li>
@@ -198,134 +200,151 @@
   <!-- HERO -->
   <section class="page-hero">
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-fade"></div>
     <div class="hero-content">
-      <span class="hero-eyebrow">Veilles · Cybersécurité &amp; informatique</span>
-      <h1>Veille <span class="grad">Informatique</span></h1>
-      <a href="veille-juridique.html" class="hero-pill-link">
-        Voir section Juridique
-        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </a>
+      <span class="hero-eyebrow">Veilles · Informatique &amp; cybersécurité</span>
+      <h1>Veille <span class="grad">informatique</span></h1>
+      <p><strong>La veille informatique</strong>, c'est suivre en continu les évolutions techniques pour anticiper les menaces, choisir les bons outils et garder un système d'information à jour.</p>
+      <a class="see-more" href="veille-juridique.html">Voir ma veille juridique →</a>
     </div>
   </section>
 
   <div class="page-content">
 
-    <!-- DÉFINITION -->
-    <div class="def-block">
-      <h2>Qu'est-ce qu'une Veille ?</h2>
-      <p class="def-text">La <strong>veille juridique</strong> désigne un processus permanent qui vise à rester informé des évolutions dans les domaines législatif, réglementaire, jurisprudentiel et doctrinal. Il s'agit d'une surveillance continue permettant de suivre les changements susceptibles d'impacter une activité ou un secteur.</p>
-      <p class="def-text">La <strong>veille technologique</strong> consiste à observer de manière continue les innovations et les avancées techniques dans un domaine spécifique. Elle permet d'anticiper les évolutions et d'identifier les nouvelles opportunités.</p>
-      <p class="def-text" style="margin-bottom:1.5rem;">Le service <strong>Google Alerts</strong> me permet de recevoir en temps réel les nouveautés liées aux sujets que je surveille.</p>
-
-      <!-- Image Google Alerts côte à côte avec texte -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;max-width:700px;margin:0 auto;">
-        <p style="font-size:0.9rem;color:var(--muted);line-height:1.8;">En paramétrant des alertes sur les mots-clés <strong style="color:var(--text)">« cloud computing »</strong> et <strong style="color:var(--text)">« télétravail »</strong>, je reçois automatiquement chaque jour les nouveaux articles publiés sur ces sujets, ce qui me permet de maintenir mes veilles à jour en temps réel.</p>
-        <div class="img-placeholder">
-          <!-- Remplace par : <img src="images/google-alerts.png" alt="Google Alerts" class="side-img"> -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>Image Google Alerts</p>
-          <span>src="images/google-alerts.png"</span>
+    <!-- Méthode -->
+    <section class="progression reveal">
+      <p class="sec-label">Méthode</p>
+      <h2 class="sec-heading">Ma démarche de veille</h2>
+      <div class="prog-track">
+        <div class="prog-step bts">
+          <div class="prog-step-title">Planifier</div>
+          <div class="prog-step-desc">Choisir un sujet utile à mon entreprise.</div>
+        </div>
+        <div class="prog-step bts">
+          <div class="prog-step-title">Collecter</div>
+          <div class="prog-step-desc">Google Alerts et flux RSS, chaque jour.</div>
+        </div>
+        <div class="prog-step bach">
+          <div class="prog-step-title">Trier</div>
+          <div class="prog-step-desc">Fiable, pertinent, critique, applicable ?</div>
+        </div>
+        <div class="prog-step bach">
+          <div class="prog-step-title">Diffuser</div>
+          <div class="prog-step-desc">La bonne information, à la bonne personne.</div>
+        </div>
+        <div class="prog-step bach">
+          <div class="prog-step-title">Archiver</div>
+          <div class="prog-step-desc">Chaque décision est tracée.</div>
         </div>
       </div>
-    </div>
-
-    <div class="sep"></div>
-
-    <!-- SUJET -->
-    <div class="sujet-header">
-      <p class="sujet-eyebrow">Sujet de veille informatique</p>
-      <h2 class="sujet-title">Le Cloud <span class="grad">Computing</span></h2>
-    </div>
-
-    <!-- Définition : texte gauche, image droite -->
-    <div class="content-row">
-      <div class="content-text">
-        <h3>Définition :</h3>
-        <p>Le cloud computing est un modèle informatique qui permet d'accéder à des ressources informatiques (serveurs, stockage, bases de données, logiciels, etc.) via Internet, sans avoir à gérer directement l'infrastructure physique. Ces ressources sont hébergées sur des serveurs distants, souvent dans des centres de données sécurisés.</p>
+      <div class="prog-legend">
+        <span>Mes sources : <span class="tools"><span class="tool">Google Alerts</span><span class="tool">Flux RSS</span><span class="tool">Microsoft Learn</span><span class="tool">CNIL</span><span class="tool">ANSSI</span></span></span>
       </div>
-      <div class="content-image">
-        <div class="img-placeholder">
-          <!-- Remplace par : <img src="images/cloud-definition.jpg" alt="Cloud Computing" class="side-img"> -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>Image Définition</p>
-          <span>src="images/cloud-definition.jpg"</span>
+    </section>
+
+    <!-- Sujet 01 : Cloud computing -->
+    <section class="skill reveal" id="cloud">
+      <div class="skill-head">
+        <div class="skill-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></div>
+        <div>
+          <p class="sec-label">Sujet 01 · Technologique</p>
+          <h2 class="sec-heading">Cloud computing</h2>
         </div>
       </div>
-    </div>
-
-    <!-- Utilisations : image gauche, texte droite -->
-    <div class="content-row reverse">
-      <div class="content-text">
-        <h3>Utilisations principales :</h3>
-        <p>Pour stocker et sauvegarder des données à distance, héberger des applications et des services en ligne, une adaptation dynamique selon les besoins (augmentation ou diminution des ressources) et la collaboration facilitée grâce à l'accès partagé et en temps réel pour tous les utilisateurs.</p>
-      </div>
-      <div class="content-image">
-        <div class="img-placeholder">
-          <!-- Remplace par : <img src="images/cloud-utilisations.jpg" alt="Utilisations Cloud" class="side-img"> -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>Image Utilisations</p>
-          <span>src="images/cloud-utilisations.jpg"</span>
+      <div class="skill-cols">
+        <div class="skill-col bts">
+          <div class="skill-col-head"><span class="lvl lvl-bts">Ce que c'est</span><span class="skill-col-status"></span></div>
+          <p class="col-lead">Accéder à des serveurs, du stockage et des logiciels via Internet, hébergés chez un fournisseur.</p>
+          <ul>
+            <li>Trois modèles : IaaS, PaaS et SaaS</li>
+            <li>Paiement à l'usage, accessible de partout</li>
+            <li>Les comptes et les données restent à protéger par l'entreprise</li>
+          </ul>
+        </div>
+        <div class="skill-arrow">→</div>
+        <div class="skill-col bach">
+          <div class="skill-col-head"><span class="lvl lvl-bach">Dans mon entreprise</span></div>
+          <ul>
+            <li>Nous utilisons SharePoint (Microsoft 365), un service SaaS</li>
+            <li>Les salariés partagent leurs documents depuis n'importe où</li>
+            <li>La capacité s'ajuste sans acheter de matériel</li>
+          </ul>
         </div>
       </div>
-    </div>
-
-    <!-- Exemple concret : texte gauche, image droite -->
-    <div class="content-row">
-      <div class="content-text">
-        <h3>Exemple concret :</h3>
-        <p>Mon entreprise utilise <strong>SharePoint</strong>, une plateforme collaborative (SaaS — Software as a Service) qui s'appuie sur le cloud computing. Cela permet de créer, stocker, organiser et partager des documents au sein de l'entreprise. Durant nos revues journalières, nous pouvons facilement augmenter la capacité des serveurs sans investir dans du matériel supplémentaire. Les employés accèdent aux fichiers depuis n'importe où grâce à une simple connexion Internet.</p>
+      <div class="skill-foot">
+        <div class="tools"><span class="tool">« cloud computing »</span><span class="tool">SaaS</span><span class="tool">Microsoft 365</span><span class="tool">SharePoint</span></div>
+        <a class="see-more" href="https://learn.microsoft.com/fr-fr/" target="_blank" rel="noopener noreferrer">Microsoft Learn →</a>
       </div>
-      <div class="content-image">
-        <div class="img-placeholder">
-          <!-- Remplace par : <img src="images/sharepoint.jpg" alt="SharePoint" class="side-img"> -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p>Image Exemple concret</p>
-          <span>src="images/sharepoint.jpg"</span>
+    </section>
+
+    <!-- Actualités -->
+    <section class="skill reveal" id="actualites">
+      <div class="news-head">
+        <div>
+          <p class="sec-label">En direct · flux RSS</p>
+          <h2 class="sec-heading">Dernières actualités</h2>
         </div>
-      </div>
-    </div>
 
-    <div class="sep"></div>
-
-    <!-- RSS ACTUALITÉS -->
-    <div class="rss-section">
-      <div class="rss-header">
-        <div class="rss-title-block">
-          <p class="section-label" style="text-align:left;">Automatique · Temps réel</p>
-          <h2 class="section-heading" style="text-align:left;">Dernières actualités</h2>
-        </div>
-        <span class="rss-badge">En direct</span>
       </div>
-      <div class="rss-grid" id="rss-container">
-        <div class="rss-loading">Chargement des actualités...</div>
-      </div>
-    </div>
+      <div class="rss-grid" id="rss-grid" data-q="cloud computing"><div class="rss-loading">Chargement des actualités…</div></div>
+    </section>
 
   </div>
 
-  <!-- FLUID DIVIDER -->
   <div class="fluid-divider">
     <canvas id="divider-canvas"></canvas>
     <div class="divider-overlay"></div>
-    <div class="divider-text">Cloud Computing</div>
+    <div class="divider-text">Veille informatique</div>
   </div>
 
   <!-- FOOTER -->
   <footer>
     <span class="footer-name">Cyrus DEHGHAN — Me contacter</span>
     <div class="footer-links">
-      <a href="#" class="footer-icon" title="Email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></a>
-      <a href="#" class="footer-icon" title="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a href="mailto:cyrusdehghan60@gmail.com" class="footer-icon" title="Email">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/cyrus-dehghan-6580a1274/" class="footer-icon" title="LinkedIn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
     </div>
   </footer>
 
   <script>
-    /* NAV */
     const nav = document.getElementById('navbar');
     window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
 
-    /* FLUID BG */
+    const navMenuItems = document.querySelectorAll('.nav-links > li');
+    navMenuItems.forEach(item => {
+      let closeTimer = null;
+      const button = item.querySelector('button');
+      const openItem = () => {
+        clearTimeout(closeTimer);
+        navMenuItems.forEach(other => other.classList.remove('open'));
+        item.classList.add('open');
+      };
+      const closeItem = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => item.classList.remove('open'), 220);
+      };
+      item.addEventListener('mouseenter', openItem);
+      item.addEventListener('mouseleave', closeItem);
+      if (button) {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          if (item.classList.contains('open')) item.classList.remove('open');
+          else openItem();
+        });
+      }
+    });
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.nav-links > li')) navMenuItems.forEach(item => item.classList.remove('open'));
+    });
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
     function FluidBg(id, opts={}) {
       const canvas = document.getElementById(id);
       if (!canvas) return;
@@ -333,7 +352,8 @@
       const { count=6, speed=0.5, minR=80, maxR=200, colors=['#2d2dff','#8b5cf6','#c084fc'] } = opts;
       let W, H;
       function resize() { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
-      resize(); new ResizeObserver(resize).observe(canvas.parentElement);
+      resize();
+      new ResizeObserver(resize).observe(canvas.parentElement);
       function hex2rgb(h) { const v=parseInt(h.slice(1),16); return [(v>>16)&255,(v>>8)&255,v&255]; }
       const rgbs = colors.map(hex2rgb);
       const blobs = Array.from({length:count},(_,i)=>({ x:Math.random()*(W||800), y:Math.random()*(H||400), vx:(Math.random()-.5)*speed, vy:(Math.random()-.5)*speed, r:minR+Math.random()*(maxR-minR), phase:Math.random()*Math.PI*2, breatheSpeed:.3+Math.random()*.5, wobble:.06+Math.random()*.08, rotSpeed:(Math.random()-.5)*.008, rot:Math.random()*Math.PI*2, ci:i%colors.length }));
@@ -341,114 +361,80 @@
       (function tick() {
         t+=.012; W=canvas.width=canvas.offsetWidth; H=canvas.height=canvas.offsetHeight;
         ctx.clearRect(0,0,W,H);
-        blobs.forEach(b=>{ const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase)); b.rot+=b.rotSpeed; const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1)); const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry)); g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`); g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`); g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`); g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`); ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br); ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore(); b.x+=b.vx; b.y+=b.vy; const p=b.r*1.5; if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p; });
-        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9); v.addColorStop(0,'rgba(19,16,42,0)'); v.addColorStop(1,'rgba(19,16,42,.75)'); ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+        blobs.forEach(b=>{
+          const rgb=rgbs[b.ci], br=b.r*(1+.14*Math.sin(t*b.breatheSpeed+b.phase));
+          b.rot+=b.rotSpeed;
+          const rx=br*(1+b.wobble*Math.sin(t*1.1+b.phase)), ry=br*(1+b.wobble*Math.cos(t*.9+b.phase+1));
+          const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,Math.max(rx,ry));
+          g.addColorStop(0,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.32)`);
+          g.addColorStop(.35,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.12)`);
+          g.addColorStop(.7,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},.04)`);
+          g.addColorStop(1,`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot); ctx.scale(rx/br,ry/br);
+          ctx.beginPath(); ctx.arc(0,0,br,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+          b.x+=b.vx; b.y+=b.vy;
+          const p=b.r*1.5;
+          if(b.x<-p)b.x=W+p; if(b.x>W+p)b.x=-p; if(b.y<-p)b.y=H+p; if(b.y>H+p)b.y=-p;
+        });
+        const v=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,W*.9);
+        v.addColorStop(0,'rgba(19,16,42,0)'); v.addColorStop(1,'rgba(19,16,42,.75)');
+        ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
         requestAnimationFrame(tick);
       })();
     }
+
     const pal = ['#2d2dff','#8b5cf6','#c084fc','#4f4fff','#7c3aed','#a78bfa'];
     FluidBg('hero-canvas',    { count:6, speed:.38, minR:80,  maxR:220, colors:pal });
     FluidBg('divider-canvas', { count:5, speed:.65, minR:60,  maxR:150, colors:pal });
-
-    /* RSS FEED — Cloud Computing, multi-proxy fallback */
-    async function loadRSS() {
-      const container = document.getElementById('rss-container');
-      const query = 'cloud+computing+informatique';
-      const googleRSS = `https://news.google.com/rss/search?q=${query}&hl=fr&gl=FR&ceid=FR:fr`;
-
-      // Plusieurs proxies CORS en fallback
-      const proxies = [
-        `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(googleRSS)}&count=6`,
-        `https://corsproxy.io/?${encodeURIComponent(googleRSS)}`,
-        `https://api.allorigins.win/get?url=${encodeURIComponent(googleRSS)}`
+  </script>
+  <script>
+    /* ACTUALITÉS — flux RSS Google News du sujet choisi, avec plusieurs relais en secours */
+    const RSS_COUNT = 3;
+    const rssBox = document.getElementById('rss-grid');
+    async function loadRSS(query) {
+      const googleRSS = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=fr&gl=FR&ceid=FR:fr`;
+      const newsPage = `https://news.google.com/search?q=${encodeURIComponent(query)}&hl=fr&gl=FR&ceid=FR:fr`;
+      const fmtDate = d => { const x = new Date(d); return isNaN(x) ? '' : x.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); };
+      // Google News termine les titres par « - Source » : on sépare les deux
+      const splitTitle = (title, fallback) => { const i = title.lastIndexOf(' - '); return i > 20 ? { title: title.slice(0, i), source: title.slice(i + 3) } : { title, source: fallback }; };
+      const fromRss2json = data => {
+        if (data.status !== 'ok' || !data.items?.length) throw new Error('vide');
+        return data.items.slice(0, RSS_COUNT).map(it => ({ ...splitTitle(it.title || '', it.author || 'Google News'), link: it.link, date: fmtDate(it.pubDate) }));
+      };
+      const fromXML = xml => {
+        const items = [...new DOMParser().parseFromString(xml, 'text/xml').querySelectorAll('item')].slice(0, RSS_COUNT);
+        if (!items.length) throw new Error('vide');
+        return items.map(el => ({ ...splitTitle(el.querySelector('title')?.textContent || '', el.querySelector('source')?.textContent || 'Google News'), link: el.querySelector('link')?.textContent || '', date: fmtDate(el.querySelector('pubDate')?.textContent || '') }));
+      };
+      // Construction des cartes sans injecter de HTML venant du flux
+      const render = articles => rssBox.replaceChildren(...articles.map(a => {
+        const card = document.createElement('a');
+        card.className = 'rss-card';
+        card.href = /^https?:\/\//.test(a.link) ? a.link : newsPage;
+        card.target = '_blank'; card.rel = 'noopener noreferrer';
+        const src = document.createElement('span'); src.className = 'rss-source'; src.textContent = a.source;
+        const title = document.createElement('div'); title.className = 'rss-card-title'; title.textContent = a.title;
+        const date = document.createElement('div'); date.className = 'rss-card-date'; date.textContent = a.date;
+        card.append(src, title, date);
+        return card;
+      }));
+      const attempts = [
+        async () => fromRss2json(await (await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(googleRSS)}`)).json()),
+        async () => fromXML(await (await fetch(`https://corsproxy.io/?${encodeURIComponent(googleRSS)}`)).text()),
+        async () => fromXML((await (await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(googleRSS)}`)).json()).contents)
       ];
-
-      function parseRss2json(data) {
-        if (data.status !== 'ok' || !data.items?.length) throw new Error('bad');
-        return data.items.slice(0, 6).map(item => ({
-          title: item.title,
-          link: item.link,
-          source: item.author || new URL(item.link).hostname.replace('www.',''),
-          date: new Date(item.pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
-          img: item.enclosure?.link || item.thumbnail || ''
-        }));
+      rssBox.innerHTML = '<div class="rss-loading">Chargement des actualités…</div>';
+      for (const attempt of attempts) {
+        try { render(await attempt()); return; } catch (e) { /* relais suivant */ }
       }
-
-      function parseXML(xmlStr) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xmlStr, 'text/xml');
-        const items = Array.from(doc.querySelectorAll('item')).slice(0, 6);
-        if (!items.length) throw new Error('no items');
-        return items.map(el => {
-          const link = el.querySelector('link')?.textContent || el.querySelector('guid')?.textContent || '#';
-          let source = 'Google News';
-          try { source = new URL(link).hostname.replace('www.',''); } catch(e) {}
-          const pubDate = el.querySelector('pubDate')?.textContent || '';
-          const date = pubDate ? new Date(pubDate).toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }) : '';
-          return { title: el.querySelector('title')?.textContent || '', link, source, date, img: '' };
-        });
-      }
-
-      function renderCards(articles) {
-        container.innerHTML = articles.map(a => `
-          <a href="${a.link}" target="_blank" rel="noopener noreferrer" class="rss-card">
-            ${a.img
-              ? `<div class="rss-card-img"><img src="${a.img}" alt="" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`
-              : `<div class="rss-img-placeholder"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>`}
-            <div class="rss-card-body">
-              <span class="rss-source">${a.source}</span>
-              <div class="rss-card-title">${a.title}</div>
-              <div class="rss-card-date">${a.date}</div>
-            </div>
-          </a>`).join('');
-      }
-
-      // Essai proxy 1 : rss2json
-      try {
-        const res = await fetch(proxies[0]);
-        const data = await res.json();
-        renderCards(parseRss2json(data));
-        return;
-      } catch(e) {}
-
-      // Essai proxy 2 : corsproxy.io (retourne XML brut)
-      try {
-        const res = await fetch(proxies[1]);
-        const text = await res.text();
-        renderCards(parseXML(text));
-        return;
-      } catch(e) {}
-
-      // Essai proxy 3 : allorigins (retourne { contents: "xml..." })
-      try {
-        const res = await fetch(proxies[2]);
-        const data = await res.json();
-        renderCards(parseXML(data.contents));
-        return;
-      } catch(e) {}
-
-      // Tous les proxies ont échoué
-      container.innerHTML = `<div class="rss-error">
-        <p style="margin-bottom:0.5rem;font-weight:500;color:var(--text)">Actualités temporairement indisponibles</p>
-        <p>Les flux d'actualités sont inaccessibles pour le moment. Réessaie en rechargeant la page.</p>
-      </div>`;
+      rssBox.innerHTML = `<div class="rss-error">Actualités indisponibles pour le moment. <a href="${newsPage}" target="_blank" rel="noopener noreferrer">Voir sur Google News →</a></div>`;
     }
-    loadRSS();
-  
-    /* ── Dropdown click toggle ── */
-    document.querySelectorAll('.nav-links > li > button').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        const li = btn.parentElement;
-        const isOpen = li.classList.contains('open');
-        document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
-        if (!isOpen) li.classList.add('open');
-      });
-    });
-    document.addEventListener('click', () => {
-      document.querySelectorAll('.nav-links > li').forEach(l => l.classList.remove('open'));
-    });
-
+    const newsChips = [...document.querySelectorAll('.chip[data-q]')];
+    newsChips.forEach(chip => chip.addEventListener('click', () => {
+      newsChips.forEach(c => c.classList.toggle('active', c === chip));
+      loadRSS(chip.dataset.q);
+    }));
+    loadRSS(rssBox.dataset.q);
   </script>
   <script src="ambient.js"></script>
 </body>

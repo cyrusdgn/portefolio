@@ -102,6 +102,14 @@
     .domain-tp .domain-icon { background: rgba(45,212,191,0.12); border-color: rgba(45,212,191,0.3); color: #5eead4; }
     .domain-tp .sec-label { color: #2dd4bf; }
 
+    /* Présentations (supports type slides) : même principe que les TP, en ambre */
+    .chip-pres { color: #fcd34d; border-color: rgba(251,191,36,0.3); }
+    .chip-pres:hover { color: #fde68a; border-color: rgba(251,191,36,0.55); }
+    .chip-pres.active { color: #2a1a00; background: #fbbf24; border-color: #fbbf24; }
+    .domain-pres { padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .domain-pres .domain-icon { background: rgba(251,191,36,0.12); border-color: rgba(251,191,36,0.3); color: #fcd34d; }
+    .domain-pres .sec-label { color: #fbbf24; }
+
     .perso-link { text-align: center; font-size: 0.86rem; color: var(--muted); margin-top: -1.5rem; }
     .perso-link a { color: #a5b4fc; text-decoration: none; font-weight: 500; }
     .perso-link a:hover { text-decoration: underline; }
@@ -245,6 +253,7 @@
         <button class="chip" data-filter="bachelor">Bachelor<span class="count"></span></button>
         <span class="filter-sep"></span>
         <button class="chip chip-tp" data-filter="tp">TP<span class="count"></span></button>
+        <button class="chip chip-pres" data-filter="pres">Présentations<span class="count"></span></button>
       </div>
       <div class="filter-group">
         <span class="filter-label">Domaine</span>
@@ -253,6 +262,7 @@
         <a class="chip" href="#securite">Cybersécurité</a>
         <a class="chip" href="#supervision">Supervision &amp; support</a>
         <a class="chip" href="#tp">TP</a>
+        <a class="chip" href="#presentations">Présentations</a>
       </div>
     </div>
 
@@ -674,6 +684,46 @@
       <p class="domain-empty">Aucun TP pour l'instant : ils seront ajoutés ici prochainement.</p>
     </section>
 
+    <!-- ═══════════════ PRÉSENTATIONS ═══════════════ -->
+    <section class="domain domain-pres" id="presentations">
+      <div class="domain-head">
+        <div class="domain-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M12 16v4M8 21h8"/><path d="M7 12l3-3 2 2 4-4"/></svg>
+        </div>
+        <div>
+          <p class="sec-label">Supports de présentation</p>
+          <h2 class="sec-heading">Présentations</h2>
+          <p class="domain-prog">Supports de présentation réalisés en formation et en alternance : soutenances, exposés et restitutions de projets.</p>
+        </div>
+      </div>
+
+      <!-- Ajouter ici les présentations (PDF dans le dossier Dossiers/) en copiant ce modèle :
+        <a class="proc-card" data-level="bachelor" href="Dossiers/NOM%20DU%20FICHIER.pdf" target="_blank" rel="noopener noreferrer">
+          <div class="proc-img">
+            <div style="width:100%; height:100%; box-sizing:border-box; padding:2.2rem 1rem 1rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.2rem; text-align:center; background:linear-gradient(135deg,#b45309,#7c2d12); color:#fff;">
+              <span style="font-size:0.6rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; opacity:0.85;">Présentation</span>
+              <span style="font-family:'Syne', sans-serif; font-size:0.95rem; font-weight:800; letter-spacing:0.01em; max-width:100%; overflow-wrap:anywhere;">Titre de la présentation</span>
+              <span style="font-size:0.58rem; letter-spacing:0.06em; opacity:0.75;">Mots-clés · Outils</span>
+            </div>
+            <span class="lvl lvl-bach">Bachelor</span>
+            <div class="proc-img-overlay">
+              <svg width="16" height="16" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              Ouvrir le PDF
+            </div>
+          </div>
+          <div class="proc-info">
+            <span class="ctx">Présentation · Bachelor</span>
+            <div class="proc-title">Titre de la présentation</div>
+            <div class="proc-desc">Une phrase qui résume le sujet présenté.</div>
+          </div>
+        </a>
+        Pour une présentation du BTS : data-level="bts", badge <span class="lvl lvl-bts">BTS</span> et <span class="ctx">Présentation · BTS</span>. -->
+      <div class="proc-grid">
+
+      </div>
+      <p class="domain-empty">Aucune présentation pour l'instant : elles seront ajoutées ici prochainement.</p>
+    </section>
+
     <p class="perso-link">Vous cherchez mes projets personnels ? Ils ont leur propre page : <a href="projets-perso.html">Projets personnels →</a></p>
 
   </div>
@@ -745,17 +795,17 @@
       });
     }
     updateEmptyStates();
-    // Un TP est toute carte placée dans la section #tp
-    const isTp = card => !!card.closest('#tp');
-    const matches = (card, f) => f === 'all' || (f === 'tp' ? isTp(card) : card.dataset.level === f);
+    // Un TP (ou une présentation) est toute carte placée dans la section #tp (ou #presentations)
+    const sectionOf = { tp: 'tp', pres: 'presentations' };
+    const matches = (card, f) => f === 'all' || (sectionOf[f] ? !!card.closest('#' + sectionOf[f]) : card.dataset.level === f);
     chips.forEach(chip => {
       const f = chip.dataset.filter;
       chip.querySelector('.count').textContent = [...cards].filter(c => matches(c, f)).length;
       chip.addEventListener('click', () => {
         chips.forEach(c => c.classList.toggle('active', c === chip));
         cards.forEach(card => card.classList.toggle('is-hidden', !matches(card, f)));
-        // Filtre TP : on masque les domaines de procédures pour que les TP remontent sous les filtres
-        document.querySelectorAll('.domain').forEach(d => d.classList.toggle('is-hidden', f === 'tp' && d.id !== 'tp'));
+        // Filtre TP ou Présentations : on masque les autres sections pour que la sienne remonte sous les filtres
+        document.querySelectorAll('.domain').forEach(d => d.classList.toggle('is-hidden', !!sectionOf[f] && d.id !== sectionOf[f]));
         updateEmptyStates();
       });
     });
